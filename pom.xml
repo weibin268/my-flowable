@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.weibin268</groupId>
-    <artifactId>my-flowable-parent</artifactId>
+    <artifactId>my-flowable-root</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
