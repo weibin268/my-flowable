@@ -53,8 +53,7 @@ public class ProcessDefinitionManager {
     }
 
     public FlowNode getFlowNodeByTaskId(String taskId) {
-        HistoricTaskInstance historicTaskInstance = historyService.createHistoricTaskInstanceQuery().taskId(taskId)
-                .singleResult();
+        HistoricTaskInstance historicTaskInstance = historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
         if (historicTaskInstance == null) {
             throw new HistoricTaskNotFoundException("taskId:" + taskId);
         }
@@ -91,17 +90,12 @@ public class ProcessDefinitionManager {
     }
 
     public boolean isEndTask(String taskId) {
-        boolean result = false;
-        ActivityImpl activityImpl = getActivityImpl(taskId);
-        List<PvmTransition> incomingTransitions = activityImpl.getOutgoingTransitions();
-        for (PvmTransition pvmTransition : incomingTransitions) {
-            PvmActivity pvmActivity = pvmTransition.getDestination();
-            if (pvmActivity.getProperty("type").equals("endEvent")) {
-                result = true;
-                break;
-            }
+        FlowNode flowNode = getFlowNodeByTaskId(taskId);
+        if (flowNode instanceof EndEvent) {
+            return true;
+        } else {
+            return false;
         }
-        return result;
     }
 
 }

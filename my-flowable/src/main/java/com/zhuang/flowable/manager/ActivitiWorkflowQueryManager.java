@@ -162,7 +162,6 @@ public class ActivitiWorkflowQueryManager implements WorkflowQueryManager {
             taskInfo.setUserId(historicTaskInstance.getAssignee());
             taskInfo.setUserName(userManagementService.getUser(taskInfo.getUserId()).getUserName());
 
-
             if (taskInfo.getUserId() == null) {
                 List<String> userIds = new ArrayList<String>();
                 List<String> userNames = new ArrayList<String>();
