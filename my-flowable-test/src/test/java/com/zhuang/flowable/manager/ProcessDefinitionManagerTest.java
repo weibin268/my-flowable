@@ -13,8 +13,6 @@ class ProcessDefinitionManagerTest extends MyFlowableTestApplicationTest {
 
     @Test
     void getCurrentTaskDef() {
-
-        processDefinitionManager.getCurrentTaskDef("f3df49d2-35de-11ea-8f64-18602477cc91");
-
+        processDefinitionManager.getTaskDefModelByTaskId("f3df49d2-35de-11ea-8f64-18602477cc91");
     }
 }

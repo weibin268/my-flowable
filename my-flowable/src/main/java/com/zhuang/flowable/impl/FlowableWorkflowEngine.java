@@ -208,8 +208,7 @@ public class FlowableWorkflowEngine extends AbstractWorkflowEngine {
         if (isCountersign4Current) {
             List<Task> tasks = taskService.createTaskQuery().processInstanceId(task.getProcessInstanceId()).list();
             if (tasks.size() >= 0) {
-                TaskDefModel newTaskDefModel = processDefinitionManager.convertActivityImplToTaskDefModel(
-                        processDefinitionManager.getActivityImpl(tasks.get(0).getId()));
+                TaskDefModel newTaskDefModel = processDefinitionManager.getTaskDefModelByTaskId(tasks.get(0).getId());
                 if (newTaskDefModel.getIsCountersign() == false) {
                     setTaskUser(task.getId(), nextUsers);
                 }
