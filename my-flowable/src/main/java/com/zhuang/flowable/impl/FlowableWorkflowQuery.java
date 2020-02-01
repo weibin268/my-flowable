@@ -1,6 +1,6 @@
 package com.zhuang.flowable.impl;
 
-import com.zhuang.flowable.WorkflowQueryManager;
+import com.zhuang.flowable.WorkflowQuery;
 import com.zhuang.flowable.constant.EndTaskVariableNames;
 import com.zhuang.flowable.constant.ProcessMainVariableNames;
 import com.zhuang.flowable.manager.ProcessDefinitionManager;
@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class FlowableWorkflowQueryManager implements WorkflowQueryManager {
+public class FlowableWorkflowQuery implements WorkflowQuery {
 
     @Autowired
     private TaskService taskService;

@@ -14,7 +14,7 @@ import java.util.Map;
  * @author zwb
  *
  */
-public interface WorkflowQueryManager {
+public interface WorkflowQuery {
 
 	/**
 	 * 我的待办分页查询
