@@ -1,6 +1,6 @@
 package com.zhuang.flowable.impl;
 
-import com.zhuang.flowable.AbstractWorkflowEngine;
+import com.zhuang.flowable.BaseWorkflowEngine;
 import com.zhuang.flowable.WorkflowActionListener;
 import com.zhuang.flowable.WorkflowEngineContext;
 import com.zhuang.flowable.constant.CountersignVariableNames;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
-public class FlowableWorkflowEngine extends AbstractWorkflowEngine {
+public class FlowableWorkflowEngine extends BaseWorkflowEngine {
 
     @Autowired
     private RuntimeService runtimeService;
