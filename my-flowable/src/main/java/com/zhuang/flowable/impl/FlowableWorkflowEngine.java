@@ -181,7 +181,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     }
 
     private String getChoiceFromFormData(Map<String, Object> formData) {
-        Object objChoice = formData.get(WorkflowChoiceOptions.getStoreKey());
+        Object objChoice = formData.get(WorkflowChoiceOptions.STORE_KEY);
         return objChoice == null ? "" : objChoice.toString();
     }
 

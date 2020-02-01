@@ -2,7 +2,7 @@ package com.zhuang.flowable.constant;
 
 public class WorkflowChoiceOptions {
 
-	private static final String STOREKEY = "choice";
+	public static final String STORE_KEY = "choice";
 
 	public static final String SAVE = "保存";
 	
@@ -19,8 +19,4 @@ public class WorkflowChoiceOptions {
 	public static final String AGREE = "同意";
 
 	public static final String DISAGREE = "不同意";
-
-	public static String getStoreKey() {
-		return STOREKEY;
-	}
 }
