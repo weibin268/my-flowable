@@ -217,11 +217,9 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     }
 
     private void setTaskUser(String preTaskId, List<String> users) {
-        HistoricTaskInstance historicTaskInstance = historyService.createHistoricTaskInstanceQuery()
-                .taskId(preTaskId).singleResult();
+        HistoricTaskInstance historicTaskInstance = historyService.createHistoricTaskInstanceQuery().taskId(preTaskId).singleResult();
         if (users != null && users.size() != 0) {
-            List<Task> nextTaskList = taskService.createTaskQuery().processInstanceId(historicTaskInstance
-                    .getProcessInstanceId()).list();
+            List<Task> nextTaskList = taskService.createTaskQuery().processInstanceId(historicTaskInstance.getProcessInstanceId()).list();
             for (Task nextTask : nextTaskList) {
                 if (users.size() == 1) {
                     // nextTask.setAssignee(nextUsers.get(0));
