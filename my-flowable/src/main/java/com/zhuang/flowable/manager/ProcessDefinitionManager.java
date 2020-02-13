@@ -98,4 +98,14 @@ public class ProcessDefinitionManager {
         }
     }
 
+    public boolean isFirstTask(String taskId) {
+        FlowNode flowNode = getFlowNodeByTaskId(taskId);
+        if (flowNode instanceof StartEvent) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 }
