@@ -10,7 +10,7 @@ public class TaskDefModel {
 	
 	private String candidateUser;
 	
-	private Boolean isCountersign;
+	private boolean isCountersign;
 
 	public String getKey() {
 		return key;

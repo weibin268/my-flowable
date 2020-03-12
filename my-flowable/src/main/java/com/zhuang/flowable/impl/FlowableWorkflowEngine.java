@@ -243,7 +243,8 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     }
 
     private TaskDefModel getNextTaskDef(String taskId, Map<String, Object> params) {
-        return null;
+        TaskDefModel taskDefModel = new TaskDefModel();
+        return taskDefModel;
     }
 
     private Map<String, Object> ensureFormDataNotNull(Map<String, Object> formData) {
@@ -259,7 +260,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         Object objCountersignApprovedCount = runtimeService.getVariable(task.getProcessInstanceId(), CountersignVariableNames.COUNTERSIGN_APPROVED_COUNT);
         Integer countersignApprovedCount = null;
         if (objCountersignApprovedCount == null) {
-            countersignApprovedCount = new Integer(0);
+            countersignApprovedCount = 0;
         } else {
             countersignApprovedCount = (Integer) objCountersignApprovedCount;
         }

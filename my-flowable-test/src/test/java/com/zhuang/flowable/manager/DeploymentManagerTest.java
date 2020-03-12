@@ -13,6 +13,6 @@ class DeploymentManagerTest extends MyFlowableTestApplicationTest {
 
     @Test
     void deployByClasspathResource() {
-        deploymentManager.deployByClasspathResource("test01.bpmn","test01");
+        deploymentManager.deployByClasspathResource("countersign-test.bpmn","countersign-test");
     }
 }

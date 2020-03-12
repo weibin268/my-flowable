@@ -2,9 +2,9 @@
 spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://weibin268.tk:3306/upms?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-    username: zhuang
-    password: 123456
+    url: jdbc:mysql://weibin268.top:3306/upms?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    username: root
+    password: 2681645
 
 # logging
 logging:

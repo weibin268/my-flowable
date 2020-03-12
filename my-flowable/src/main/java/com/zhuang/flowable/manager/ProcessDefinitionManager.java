@@ -11,6 +11,7 @@ import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.impl.RepositoryServiceImpl;
+import org.flowable.engine.impl.bpmn.behavior.ParallelMultiInstanceBehavior;
 import org.flowable.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.flowable.engine.impl.util.ProcessDefinitionUtil;
 import org.flowable.engine.repository.ProcessDefinition;
@@ -52,6 +53,12 @@ public class ProcessDefinitionManager {
         return getTaskDefModelByFlowNode(flowNode);
     }
 
+    public TaskDefModel getNextTaskDefModelByTaskId(String taskId, Map<String, Object> params) {
+        FlowNode flowNode = getFlowNodeByTaskId(taskId);
+
+        return getTaskDefModelByFlowNode(flowNode);
+    }
+
     public FlowNode getFlowNodeByTaskId(String taskId) {
         HistoricTaskInstance historicTaskInstance = historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
         if (historicTaskInstance == null) {
@@ -79,6 +86,11 @@ public class ProcessDefinitionManager {
                     break;
                 }
             }
+        }
+        if(flowNode.getBehavior() instanceof ParallelMultiInstanceBehavior){
+            result.setIsCountersign(true);
+        } else {
+            result.setIsCountersign(false);
         }
         return result;
     }
