@@ -2,7 +2,7 @@ package com.zhuang.flowable;
 
 import com.zhuang.flowable.model.FlowInfo;
 import com.zhuang.flowable.model.PageInfo;
-import com.zhuang.flowable.model.ProcDefModel;
+import com.zhuang.flowable.model.ProcDef;
 import com.zhuang.flowable.model.TaskInfo;
 
 import java.util.List;
@@ -57,6 +57,6 @@ public interface WorkflowQuery {
 	 * 获取流程定义信息列表
 	 * @return
 	 */
-	List<ProcDefModel> getProcDefList();
+	List<ProcDef> getProcDefList();
 	
 }

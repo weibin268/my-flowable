@@ -1,26 +1,19 @@
 package com.zhuang.flowable;
 
-import com.zhuang.flowable.model.TaskDefModel;
+import com.zhuang.flowable.model.TaskDef;
 
 import java.util.List;
 import java.util.Map;
 
 public abstract class WorkflowEngineContext {
 	
-	protected String taskId;	
-	
+	protected String taskId;
 	protected String comment;
-
 	protected List<String> nextUsers;
-	
 	protected Map<String, Object> formData;
-	
 	protected WorkflowEngine workflowEngine;
-	
-	protected TaskDefModel currentTaskDef;
-	
-	protected TaskDefModel nextTaskDef;
-	
+	protected TaskDef currentTaskDef;
+	protected TaskDef nextTaskDef;
 	protected String choice;	
 	
 	public String getTaskId() {
@@ -63,19 +56,19 @@ public abstract class WorkflowEngineContext {
 		this.workflowEngine = workflowEngine;
 	}
 	
-	public TaskDefModel getCurrentTaskDef() {
+	public TaskDef getCurrentTaskDef() {
 		return currentTaskDef;
 	}
 
-	public void setCurrentTaskDef(TaskDefModel currentTaskDef) {
+	public void setCurrentTaskDef(TaskDef currentTaskDef) {
 		this.currentTaskDef = currentTaskDef;
 	}
 
-	public TaskDefModel getNextTaskDef() {
+	public TaskDef getNextTaskDef() {
 		return nextTaskDef;
 	}
 
-	public void setNextTaskDef(TaskDefModel nextTaskDef) {
+	public void setNextTaskDef(TaskDef nextTaskDef) {
 		this.nextTaskDef = nextTaskDef;
 	}
 

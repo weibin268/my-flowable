@@ -1,15 +1,11 @@
 package com.zhuang.flowable.model;
 
-public class TaskDefModel {
-	
-	private String key;
-	
-	private String name;
+public class TaskDef {
 
+	private String key;
+	private String name;
 	private String assignee;
-	
 	private String candidateUser;
-	
 	private boolean isCountersign;
 
 	public String getKey() {

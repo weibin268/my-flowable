@@ -3,7 +3,7 @@ package com.zhuang.flowable.impl;
 import com.zhuang.flowable.WorkflowEngine;
 import com.zhuang.flowable.WorkflowEngineContext;
 import com.zhuang.flowable.manager.ProcessDefinitionManager;
-import com.zhuang.flowable.model.TaskDefModel;
+import com.zhuang.flowable.model.TaskDef;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class FlowableWorkflowEngineContext extends WorkflowEngineContext {
@@ -16,7 +16,7 @@ public class FlowableWorkflowEngineContext extends WorkflowEngineContext {
 	}
 	
 	@Override
-	public TaskDefModel getCurrentTaskDef() {
+	public TaskDef getCurrentTaskDef() {
 		
 		/*ActivitiWorkflowEngine activitiWorkflowEngine = (ActivitiWorkflowEngine) workflowEngine;
 		Task task = activitiWorkflowEngine.getTaskService().createTaskQuery().taskId(currentTask.getId())
@@ -28,7 +28,7 @@ public class FlowableWorkflowEngineContext extends WorkflowEngineContext {
 	}
 	
 	@Override	
-	public TaskDefModel getNextTaskDef() {
+	public TaskDef getNextTaskDef() {
 		
 		FlowableWorkflowEngine activitiWorkflowEngine = (FlowableWorkflowEngine) workflowEngine;
 		

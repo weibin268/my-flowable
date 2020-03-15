@@ -3,7 +3,7 @@ package com.zhuang.flowable.manager;
 
 import com.zhuang.flowable.constant.EndTaskVariableNames;
 import com.zhuang.flowable.exception.HistoricTaskNotFoundException;
-import com.zhuang.flowable.model.TaskDefModel;
+import com.zhuang.flowable.model.TaskDef;
 import org.flowable.bpmn.model.*;
 import org.flowable.bpmn.model.Process;
 import org.flowable.engine.HistoryService;
@@ -13,7 +13,6 @@ import org.flowable.engine.TaskService;
 import org.flowable.engine.impl.RepositoryServiceImpl;
 import org.flowable.engine.impl.bpmn.behavior.ParallelMultiInstanceBehavior;
 import org.flowable.engine.impl.persistence.entity.ProcessDefinitionEntity;
-import org.flowable.engine.impl.util.ProcessDefinitionUtil;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.task.api.history.HistoricTaskInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,12 +47,12 @@ public class ProcessDefinitionManager {
         return def;
     }
 
-    public TaskDefModel getTaskDefModelByTaskId(String taskId) {
+    public TaskDef getTaskDefByTaskId(String taskId) {
         FlowNode flowNode = getFlowNodeByTaskId(taskId);
         return getTaskDefModelByFlowNode(flowNode);
     }
 
-    public TaskDefModel getNextTaskDefModelByTaskId(String taskId, Map<String, Object> params) {
+    public TaskDef getNextTaskDefByTaskId(String taskId, Map<String, Object> params) {
         FlowNode flowNode = getFlowNodeByTaskId(taskId);
 
         return getTaskDefModelByFlowNode(flowNode);
@@ -68,8 +67,8 @@ public class ProcessDefinitionManager {
         return (FlowNode) process.getFlowElement(historicTaskInstance.getTaskDefinitionKey());
     }
 
-    public TaskDefModel getTaskDefModelByFlowNode(FlowNode flowNode) {
-        TaskDefModel result = new TaskDefModel();
+    public TaskDef getTaskDefModelByFlowNode(FlowNode flowNode) {
+        TaskDef result = new TaskDef();
         if (flowNode instanceof EndEvent) {
             result.setKey(EndTaskVariableNames.KEY);
             result.setName(EndTaskVariableNames.NAME);

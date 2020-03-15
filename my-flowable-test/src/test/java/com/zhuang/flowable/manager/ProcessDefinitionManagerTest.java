@@ -1,15 +1,13 @@
 package com.zhuang.flowable.manager;
 
 import com.zhuang.flowable.MyFlowableTestApplicationTest;
-import com.zhuang.flowable.model.TaskDefModel;
+import com.zhuang.flowable.model.TaskDef;
 import org.flowable.bpmn.model.FlowNode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ProcessDefinitionManagerTest extends MyFlowableTestApplicationTest {
 
@@ -18,14 +16,14 @@ class ProcessDefinitionManagerTest extends MyFlowableTestApplicationTest {
 
     @Test
     void getTaskDefModelByTaskId() {
-        TaskDefModel taskDefModel = processDefinitionManager.getTaskDefModelByTaskId("d6fa7d9e-6446-11ea-b38d-60f67771a214");
-        System.out.println(taskDefModel);
+        TaskDef taskDef = processDefinitionManager.getTaskDefByTaskId("d6fa7d9e-6446-11ea-b38d-60f67771a214");
+        System.out.println(taskDef);
     }
 
     @Test
     void getNextTaskDefModelByTaskId() {
         Map<String, Object> params = new HashMap<>();
-        processDefinitionManager.getNextTaskDefModelByTaskId("d6efdd97-6440-11ea-b5a5-60f67771a214", params);
+        processDefinitionManager.getNextTaskDefByTaskId("d6efdd97-6440-11ea-b5a5-60f67771a214", params);
     }
 
     @Test

@@ -8,7 +8,7 @@ import com.zhuang.flowable.manager.ProcessInstanceManager;
 import com.zhuang.flowable.manager.ProcessVariablesManager;
 import com.zhuang.flowable.model.FlowInfo;
 import com.zhuang.flowable.model.PageInfo;
-import com.zhuang.flowable.model.ProcDefModel;
+import com.zhuang.flowable.model.ProcDef;
 import com.zhuang.flowable.model.TaskInfo;
 import com.zhuang.flowable.service.UserManagementService;
 import com.zhuang.flowable.util.DateUtils;
@@ -116,17 +116,17 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
     }
 
     @Override
-    public List<ProcDefModel> getProcDefList() {
-        List<ProcDefModel> procDefModels = new ArrayList<ProcDefModel>();
+    public List<ProcDef> getProcDefList() {
+        List<ProcDef> procDefs = new ArrayList<ProcDef>();
         List<ProcessDefinition> processDefinitions = processDefinitionManager.getProcessDefinitionList();
         for (ProcessDefinition processDefinition : processDefinitions) {
-            ProcDefModel procDefModel = new ProcDefModel();
-            procDefModel.setKey(processDefinition.getKey());
-            procDefModel.setName(processDefinition.getName());
-            procDefModel.setDescription(processDefinition.getDescription());
-            procDefModels.add(procDefModel);
+            ProcDef procDef = new ProcDef();
+            procDef.setKey(processDefinition.getKey());
+            procDef.setName(processDefinition.getName());
+            procDef.setDescription(processDefinition.getDescription());
+            procDefs.add(procDef);
         }
-        return procDefModels;
+        return procDefs;
     }
 
     private List<TaskInfo> getHistoryTaskInfoListByInstanceId(String instanceId) {

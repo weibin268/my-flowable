@@ -1,11 +1,9 @@
 package com.zhuang.flowable.model;
 
-public class ProcDefModel {
+public class ProcDef {
 	
 	private String key;
-	
 	private String name;
-
 	private String description;
 	
 	public String getKey() {
@@ -23,8 +21,6 @@ public class ProcDefModel {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
 	
 	public String getDescription() {
 		return description;
