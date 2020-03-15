@@ -55,6 +55,7 @@ public class ProcessDefinitionManager {
     public TaskDef getNextTaskDefByTaskId(String taskId, Map<String, Object> params) {
         FlowNode flowNode = getFlowNodeByTaskId(taskId);
 
+        FlowNode nextFlowNode = getNextFlowNode(flowNode);
         return getTaskDefModelByFlowNode(flowNode);
     }
 
@@ -86,12 +87,53 @@ public class ProcessDefinitionManager {
                 }
             }
         }
-        if(flowNode.getBehavior() instanceof ParallelMultiInstanceBehavior){
+        if (flowNode.getBehavior() instanceof ParallelMultiInstanceBehavior) {
             result.setIsCountersign(true);
         } else {
             result.setIsCountersign(false);
         }
         return result;
+    }
+
+    public FlowNode getNextFlowNode(FlowNode flowNode) {
+        FlowNode result = null;
+        List<SequenceFlow> outgoingFlows = flowNode.getOutgoingFlows();
+        if (outgoingFlows.size() == 1) {
+            SequenceFlow sequenceFlow = outgoingFlows.get(0);
+            FlowElement flowElement = sequenceFlow.getTargetFlowElement();
+            if (isGatewayElement(flowElement)) {
+                Gateway gateway = (Gateway) flowElement;
+                List<SequenceFlow> gatewayOutgoingFlows = gateway.getOutgoingFlows();
+                result = getNextActivityImpl(gatewayOutgoingTransitions, params);
+            } else if (flowElement instanceof UserTask) {
+                result = (UserTask) flowElement;
+            } else if (flowElement instanceof EndEvent) {
+                result = (EndEvent) flowElement;
+                /*
+                 * result=new TaskDefinition(null);
+                 *
+                 * result.setKey(EndTaskVariableNames.KEY);
+                 *
+                 * //ValueExpression
+                 * valueExpression=ExpressionFactory.newInstance().
+                 * createValueExpression("结束", String.class);
+                 *
+                 * result.setNameExpression(new JuelExpression(null,
+                 * EndTaskVariableNames.NAME));
+                 */
+            }
+        }
+
+        return result;
+    }
+
+
+    public boolean isGatewayElement(FlowElement flowElement) {
+        if (flowElement instanceof Gateway) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public List<ProcessDefinition> getProcessDefinitionList() {
