@@ -89,7 +89,7 @@ public class ProcessDefinitionManager {
     public TaskDef getNextTaskDefByTaskId(String taskId, Map<String, Object> params) {
         FlowNode flowNode = getFlowNodeByTaskId(taskId);
         FlowNode nextFlowNode = getNextFlowNode(flowNode, params);
-        return getTaskDefModelByFlowNode(flowNode);
+        return getTaskDefModelByFlowNode(nextFlowNode);
     }
 
     public FlowNode getNextFlowNode(FlowNode flowNode, Map<String, Object> params) {

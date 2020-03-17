@@ -54,18 +54,18 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     private List<NextTaskUsersHandler> nextTaskUsersHandlerList;
 
     @Override
-    public String startNew(String processDefinitionKey, String userId, String businessKey, Map<String, Object> formData) {
-        ensureFormDataNotNull(formData);
+    public String startNew(String processDefinitionKey, String userId, String businessKey, Map<String, Object> params) {
+        ensureFormDataNotNull(params);
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionKey(processDefinitionKey).latestVersion().singleResult();
-        formData.put(ProcessMainVariableNames.PROC_DEF_KEY, processDefinition.getKey());
-        formData.put(ProcessMainVariableNames.PROC_TYPE, processDefinition.getName());
-        formData.put(ProcessMainVariableNames.PROC_CREATE_TIME, new Date());
-        formData.put(ProcessMainVariableNames.PROC_CREATE_USERID, userId);
+        params.put(ProcessMainVariableNames.PROC_DEF_KEY, processDefinition.getKey());
+        params.put(ProcessMainVariableNames.PROC_TYPE, processDefinition.getName());
+        params.put(ProcessMainVariableNames.PROC_CREATE_TIME, new Date());
+        params.put(ProcessMainVariableNames.PROC_CREATE_USERID, userId);
         UserInfo userInfo = userManagementService.getUser(userId);
-        formData.put(ProcessMainVariableNames.PROC_CREATE_USER, userInfo.getUserName());
+        params.put(ProcessMainVariableNames.PROC_CREATE_USER, userInfo.getUserName());
 
         identityService.setAuthenticatedUserId(userId);
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, formData);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, params);
         List<Task> nextTaskList = taskService.createTaskQuery().processInstanceId(processInstance.getId()).list();
         String firstTaskId = "";
         if (nextTaskList.size() == 1) {
@@ -94,15 +94,15 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     }
 
     @Override
-    public void submit(String taskId, String userId, List<String> nextUsers, String comment, Map<String, Object> formData) {
-        formData = ensureFormDataNotNull(formData);
+    public void submit(String taskId, String userId, List<String> nextUsers, String comment, Map<String, Object> params) {
+        params = ensureFormDataNotNull(params);
         TaskDef currentTaskDef = processDefinitionManager.getTaskDefByTaskId(taskId);
-        String choice = getChoiceFromFormData(formData);
+        String choice = getChoiceFromFormData(params);
 
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 
         if (currentTaskDef.getIsCountersign()) {
-            calcCountersignVariables(taskId, formData, choice);
+            calcCountersignVariables(taskId, params, choice);
         }
 
         WorkflowActionListener workflowActionListener = getWorkflowActionListenerByTaskId(taskId);
@@ -111,16 +111,16 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         workflowEngineContext.setTaskId(taskId);
         workflowEngineContext.setComment(comment);
         workflowEngineContext.setNextUsers(nextUsers);
-        workflowEngineContext.setFormData(formData);
+        workflowEngineContext.setFormData(params);
         workflowEngineContext.setCurrentTaskDef(currentTaskDef);
-        workflowEngineContext.setNextTaskDef(getNextTaskDef(taskId, formData));
+        workflowEngineContext.setNextTaskDef(getNextTaskDef(taskId, params));
         workflowEngineContext.setChoice(choice);
 
         if (workflowActionListener != null) {
             workflowActionListener.beforeSubmit(workflowEngineContext);
         }
 
-        run(task, userId, nextUsers, comment, formData, workflowEngineContext);
+        run(task, userId, nextUsers, comment, params, workflowEngineContext);
 
         if (workflowActionListener != null) {
             workflowActionListener.afterSubmit(workflowEngineContext);
@@ -129,17 +129,17 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     }
 
     @Override
-    public void delete(String taskId, String comment, Map<String, Object> formData) {
-        formData = ensureFormDataNotNull(formData);
+    public void delete(String taskId, String comment, Map<String, Object> params) {
+        params = ensureFormDataNotNull(params);
 
         WorkflowActionListener workflowActionListener = getWorkflowActionListenerByTaskId(taskId);
 
         WorkflowEngineContext workflowEngineContext = new FlowableWorkflowEngineContext(this);
         workflowEngineContext.setTaskId(taskId);
         workflowEngineContext.setComment(comment);
-        workflowEngineContext.setFormData(formData);
+        workflowEngineContext.setFormData(params);
         workflowEngineContext.setCurrentTaskDef(processDefinitionManager.getTaskDefByTaskId(taskId));
-        workflowEngineContext.setChoice(getChoiceFromFormData(formData));
+        workflowEngineContext.setChoice(getChoiceFromFormData(params));
 
         if (workflowActionListener != null) {
             workflowActionListener.beforeDelete(workflowEngineContext);
@@ -153,23 +153,23 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     }
 
     @Override
-    public NextTaskInfo retrieveNextTaskInfo(String taskId, Map<String, Object> formData) {
+    public NextTaskInfo retrieveNextTaskInfo(String taskId, Map<String, Object> params) {
         NextTaskInfo result = new NextTaskInfo();
         List<UserInfo> userInfoList = new ArrayList<UserInfo>();
-        String choice = getChoiceFromFormData(formData);
+        String choice = getChoiceFromFormData(params);
         TaskDef currentTaskDef = processDefinitionManager.getTaskDefByTaskId(taskId);
 
         if (currentTaskDef.getIsCountersign()) {
-            calcCountersignVariables(taskId, formData, choice);
+            calcCountersignVariables(taskId, params, choice);
         }
 
-        TaskDef nextTaskDef = getNextTaskDef(taskId, formData);
+        TaskDef nextTaskDef = getNextTaskDef(taskId, params);
         result.setTaskKey(nextTaskDef.getKey());
         result.setTaskName(nextTaskDef.getName());
 
         WorkflowEngineContext workflowEngineContext = new FlowableWorkflowEngineContext(this);
         workflowEngineContext.setTaskId(taskId);
-        workflowEngineContext.setFormData(formData);
+        workflowEngineContext.setFormData(params);
         workflowEngineContext.setCurrentTaskDef(currentTaskDef);
         workflowEngineContext.setNextTaskDef(nextTaskDef);
         workflowEngineContext.setChoice(choice);
@@ -230,7 +230,6 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         return formData;
     }
 
-
     private WorkflowActionListener getWorkflowActionListenerByTaskId(String taskId) {
         ProcessDefinitionEntity processDefinitionEntity = processDefinitionManager.getProcessDefinitionEntityByTaskId(taskId);
         if (workflowActionListenerList == null) return null;
@@ -247,11 +246,11 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         return taskDef;
     }
 
-    private Map<String, Object> ensureFormDataNotNull(Map<String, Object> formData) {
-        if (formData == null) {
-            formData = new HashMap<>();
+    private Map<String, Object> ensureFormDataNotNull(Map<String, Object> params) {
+        if (params == null) {
+            params = new HashMap<>();
         }
-        return formData;
+        return params;
     }
 
     private void calcCountersignVariables(String taskId, Map<String, Object> envVariables, String choice) {

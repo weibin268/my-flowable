@@ -24,7 +24,9 @@ class ProcessDefinitionManagerTest extends MyFlowableTestApplicationTest {
     @Test
     void getNextTaskDefByTaskId() {
         Map<String, Object> params = new HashMap<>();
-       // processDefinitionManager.getNextTaskDefByTaskId("d6efdd97-6440-11ea-b5a5-60f67771a214", params);
+        params.put("amount", 500);
+        TaskDef taskDef = processDefinitionManager.getNextTaskDefByTaskId("f66dc25d-67f8-11ea-a302-18602477cc91", params);
+        System.out.println(taskDef);
     }
 
     @Test
