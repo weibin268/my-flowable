@@ -4,6 +4,7 @@ package com.zhuang.flowable.manager;
 import com.zhuang.flowable.constant.EndTaskVariableNames;
 import com.zhuang.flowable.exception.HistoricTaskNotFoundException;
 import com.zhuang.flowable.model.TaskDef;
+import com.zhuang.flowable.util.FlowableJuelUtils;
 import org.flowable.bpmn.model.*;
 import org.flowable.bpmn.model.Process;
 import org.flowable.engine.HistoryService;
@@ -26,13 +27,10 @@ public class ProcessDefinitionManager {
 
     @Autowired
     private RuntimeService runtimeService;
-
     @Autowired
     private TaskService taskService;
-
     @Autowired
     private RepositoryService repositoryService;
-
     @Autowired
     private HistoryService historyService;
 
@@ -42,20 +40,13 @@ public class ProcessDefinitionManager {
         return def;
     }
 
-    public ProcessDefinitionEntity getProcessDefinitionEntityByKey(String proDefkey) {
-        ProcessDefinitionEntity def = (ProcessDefinitionEntity) repositoryService.createProcessDefinitionQuery().processDefinitionKey(proDefkey).latestVersion().singleResult();
+    public ProcessDefinitionEntity getProcessDefinitionEntityByKey(String proDefKey) {
+        ProcessDefinitionEntity def = (ProcessDefinitionEntity) repositoryService.createProcessDefinitionQuery().processDefinitionKey(proDefKey).latestVersion().singleResult();
         return def;
     }
 
     public TaskDef getTaskDefByTaskId(String taskId) {
         FlowNode flowNode = getFlowNodeByTaskId(taskId);
-        return getTaskDefModelByFlowNode(flowNode);
-    }
-
-    public TaskDef getNextTaskDefByTaskId(String taskId, Map<String, Object> params) {
-        FlowNode flowNode = getFlowNodeByTaskId(taskId);
-
-        FlowNode nextFlowNode = getNextFlowNode(flowNode);
         return getTaskDefModelByFlowNode(flowNode);
     }
 
@@ -95,16 +86,25 @@ public class ProcessDefinitionManager {
         return result;
     }
 
-    public FlowNode getNextFlowNode(FlowNode flowNode) {
+    public TaskDef getNextTaskDefByTaskId(String taskId, Map<String, Object> params) {
+        FlowNode flowNode = getFlowNodeByTaskId(taskId);
+        FlowNode nextFlowNode = getNextFlowNode(flowNode, params);
+        return getTaskDefModelByFlowNode(flowNode);
+    }
+
+    public FlowNode getNextFlowNode(FlowNode flowNode, Map<String, Object> params) {
+        return getNextFlowNode(flowNode.getOutgoingFlows(), params);
+    }
+
+    public FlowNode getNextFlowNode(List<SequenceFlow> sequenceFlowList, Map<String, Object> params) {
         FlowNode result = null;
-        List<SequenceFlow> outgoingFlows = flowNode.getOutgoingFlows();
-        if (outgoingFlows.size() == 1) {
-            SequenceFlow sequenceFlow = outgoingFlows.get(0);
+        if (sequenceFlowList.size() == 1) {
+            SequenceFlow sequenceFlow = sequenceFlowList.get(0);
             FlowElement flowElement = sequenceFlow.getTargetFlowElement();
-            if (isGatewayElement(flowElement)) {
+            if (flowElement instanceof Gateway) {
                 Gateway gateway = (Gateway) flowElement;
                 List<SequenceFlow> gatewayOutgoingFlows = gateway.getOutgoingFlows();
-                result = getNextActivityImpl(gatewayOutgoingTransitions, params);
+                result = getNextFlowNode(gatewayOutgoingFlows, params);
             } else if (flowElement instanceof UserTask) {
                 result = (UserTask) flowElement;
             } else if (flowElement instanceof EndEvent) {
@@ -122,23 +122,35 @@ public class ProcessDefinitionManager {
                  * EndTaskVariableNames.NAME));
                  */
             }
+        } else {
+            SequenceFlow correctGwOutTransi = null;
+            SequenceFlow defaultGwOutTransi = null;
+            for (SequenceFlow gwOutTransi : sequenceFlowList) {
+                String conditionText = gwOutTransi.getConditionExpression();
+                if (conditionText == null) {
+                    defaultGwOutTransi = gwOutTransi;
+                }
+                if (conditionText != null && FlowableJuelUtils.evaluateBooleanResult(conditionText, params)) {
+                    correctGwOutTransi = gwOutTransi;
+                }
+            }
+            if (correctGwOutTransi == null) {
+                correctGwOutTransi = defaultGwOutTransi;
+            }
+            if (correctGwOutTransi != null) {
+                FlowElement tempFlowElement = correctGwOutTransi.getTargetFlowElement();
+                if (tempFlowElement instanceof Gateway) {
+                    result = getNextFlowNode((Gateway) tempFlowElement, params);
+                } else if (tempFlowElement instanceof FlowNode) {
+                    result = (FlowNode) tempFlowElement;
+                }
+            }
         }
-
         return result;
     }
 
-
-    public boolean isGatewayElement(FlowElement flowElement) {
-        if (flowElement instanceof Gateway) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public List<ProcessDefinition> getProcessDefinitionList() {
-        List<ProcessDefinition> processDefinitions = repositoryService.createProcessDefinitionQuery().active()
-                .latestVersion().list();
+        List<ProcessDefinition> processDefinitions = repositoryService.createProcessDefinitionQuery().active().latestVersion().list();
         return processDefinitions;
     }
 
