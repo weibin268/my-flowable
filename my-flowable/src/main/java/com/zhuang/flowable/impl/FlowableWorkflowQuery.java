@@ -132,7 +132,7 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
     }
 
     private List<TaskInfo> getHistoryTaskInfoListByInstanceId(String instanceId) {
-        List<TaskInfo> taskInfos = new ArrayList<TaskInfo>();
+        List<TaskInfo> result = new ArrayList<TaskInfo>();
         List<HistoricTaskInstance> historicTaskInstances = historyService.createHistoricTaskInstanceQuery().processInstanceId(instanceId).orderByTaskCreateTime().asc().list();
         for (HistoricTaskInstance historicTaskInstance : historicTaskInstances) {
             TaskInfo taskInfo = new TaskInfo();
@@ -155,16 +155,16 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
                 taskInfo.setUserId(StringUtils.join(userIds.toArray(new String[userIds.size()]), ","));
                 taskInfo.setUserName(StringUtils.join(userNames.toArray(new String[userNames.size()]), ","));
             }
-            taskInfo.setStartTime(historicTaskInstance.getStartTime());
+            taskInfo.setStartTime(historicTaskInstance.getCreateTime());
             taskInfo.setEndTime(historicTaskInstance.getEndTime());
             List<Comment> comments = taskService.getTaskComments(historicTaskInstance.getId());
             if (comments.size() > 0) {
                 taskInfo.setComment(comments.get(0).getFullMessage());
             }
-            taskInfos.add(taskInfo);
+            result.add(taskInfo);
         }
-        if (taskInfos.size() > 0) {
-            TaskInfo lastTask = taskInfos.get(taskInfos.size() - 1);
+        if (result.size() > 0) {
+            TaskInfo lastTask = result.get(result.size() - 1);
             if (lastTask.getEndTime() != null) {
                 boolean isEndTask = processDefinitionManager.isEndTask(lastTask.getId());
                 if (isEndTask) {
@@ -177,11 +177,11 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
                     taskInfo.setStartTime(lastTask.getEndTime());
                     taskInfo.setEndTime(lastTask.getEndTime());
                     taskInfo.setComment(EndTaskVariableNames.COMMENT);
-                    taskInfos.add(taskInfo);
+                    result.add(taskInfo);
                 }
             }
         }
-        return taskInfos;
+        return result;
     }
 
     private void setTaskQueryConditions(TaskInfoQuery taskInfoQuery, Map<String, Object> conditions) {
