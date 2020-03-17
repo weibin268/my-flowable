@@ -79,5 +79,5 @@ public interface WorkflowEngine {
 	 * @param taskId
 	 * @return
 	 */
-	Map<String, Object> retrieveFormData(String taskId);
+	Map<String, Object> retrieveParams(String taskId);
 }

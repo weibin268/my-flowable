@@ -1,6 +1,8 @@
 package com.zhuang.flowable.impl;
 
 import com.zhuang.flowable.MyFlowableTestApplicationTest;
+import com.zhuang.flowable.constant.WorkflowChoiceOptions;
+import com.zhuang.flowable.model.NextTaskInfo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,9 +31,18 @@ class FlowableWorkflowEngineTest extends MyFlowableTestApplicationTest {
 
     @Test
     void submit() {
-        String taskId = "24567abc-67ff-11ea-943f-18602477cc91";
-        Map<String, Object> formData = new HashMap<>();
-        flowableWorkflowEngine.submit(taskId, "1", Arrays.asList("1"), "aa", formData);
+        String taskId = "c1b3b89d-6804-11ea-9b7a-18602477cc91";
+        Map<String, Object> params = new HashMap<>();
+        params.put("amount",10000);
+        flowableWorkflowEngine.submit(taskId, "zs", Arrays.asList("1"), "bb", params);
+    }
+
+    @Test
+    void retrieveNextTaskInfo() {
+        Map<String, Object> params = new HashMap<>();
+        params.put(WorkflowChoiceOptions.STORE_KEY, WorkflowChoiceOptions.AGREE);
+        NextTaskInfo nextTaskInfo = flowableWorkflowEngine.retrieveNextTaskInfo("8e5d4359-685f-11ea-87ef-34f39a2852bc", params);
+        System.out.println(nextTaskInfo);
     }
 
 }

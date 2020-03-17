@@ -48,6 +48,14 @@ public class NextTaskInfo {
 	public void setUsers(List<UserInfo> users) {
 		this.users = users;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "NextTaskInfo{" +
+				"taskKey='" + taskKey + '\'' +
+				", taskName='" + taskName + '\'' +
+				", isCountersign=" + isCountersign +
+				", users=" + users +
+				'}';
+	}
 }

@@ -50,7 +50,7 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
     @Autowired
     private ProcessInstanceManager processInstanceManager;
     @Autowired
-    ProcessDefinitionManager processDefinitionManager;
+    private ProcessDefinitionManager processDefinitionManager;
 
     @Override
     public PageInfo<FlowInfo> getMyTodoListPage(String userId, int pageNo, int pageSize, Map<String, Object> conditions) {

@@ -77,18 +77,18 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     }
 
     @Override
-    public void save(String taskId, String comment, Map<String, Object> formData) {
-        ensureFormDataNotNull(formData);
-        taskService.setVariables(taskId, formData);
+    public void save(String taskId, String comment, Map<String, Object> params) {
+        ensureFormDataNotNull(params);
+        taskService.setVariables(taskId, params);
         List<String> nextUsers = new ArrayList<String>();
         WorkflowActionListener workflowActionListener = getWorkflowActionListenerByTaskId(taskId);
         WorkflowEngineContext workflowEngineContext = new FlowableWorkflowEngineContext(this);
         workflowEngineContext.setTaskId(taskId);
         workflowEngineContext.setComment(comment);
         workflowEngineContext.setNextUsers(nextUsers);
-        workflowEngineContext.setFormData(formData);
+        workflowEngineContext.setFormData(params);
         workflowEngineContext.setCurrentTaskDef(processDefinitionManager.getTaskDefByTaskId(taskId));
-        workflowEngineContext.setNextTaskDef(getNextTaskDef(taskId, formData));
+        workflowEngineContext.setNextTaskDef(getNextTaskDef(taskId, params));
         if (workflowActionListener != null) {
             workflowActionListener.onSave(workflowEngineContext);
         }
@@ -206,29 +206,29 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     }
 
     @Override
-    public Map<String, Object> retrieveFormData(String taskId) {
-        Map<String, Object> formData = processVariablesManager.getProcessVariablesByTaskId(taskId);
+    public Map<String, Object> retrieveParams(String taskId) {
+        Map<String, Object> params = processVariablesManager.getProcessVariablesByTaskId(taskId);
 
         TaskDef currentTaskDef = processDefinitionManager.getTaskDefByTaskId(taskId);
         ProcessDefinition processDefinition = processDefinitionManager.getProcessDefinitionEntityByTaskId(taskId);
 
-        formData.put(FormDataVariableNames.IS_FIRST_TASK, processDefinitionManager.isFirstTask(taskId));
-        formData.put(FormDataVariableNames.CURRENT_TASK_KEY, currentTaskDef.getKey());
-        formData.put(FormDataVariableNames.CURRENT_TASK_NAME, currentTaskDef.getName());
-        formData.put(FormDataVariableNames.IS_RUNNING_TASK, userTaskManager.isRunningTask(taskId));
-        formData.put(FormDataVariableNames.PRO_DEF_KEY, processDefinition.getKey());
-        formData.put(FormDataVariableNames.PRO_DEF_NAME, processDefinition.getName());
+        params.put(FormDataVariableNames.IS_FIRST_TASK, processDefinitionManager.isFirstTask(taskId));
+        params.put(FormDataVariableNames.CURRENT_TASK_KEY, currentTaskDef.getKey());
+        params.put(FormDataVariableNames.CURRENT_TASK_NAME, currentTaskDef.getName());
+        params.put(FormDataVariableNames.IS_RUNNING_TASK, userTaskManager.isRunningTask(taskId));
+        params.put(FormDataVariableNames.PRO_DEF_KEY, processDefinition.getKey());
+        params.put(FormDataVariableNames.PRO_DEF_NAME, processDefinition.getName());
 
         WorkflowActionListener workflowActionListener = getWorkflowActionListenerByTaskId(taskId);
         if (workflowActionListener != null) {
             WorkflowEngineContext workflowEngineContext = new FlowableWorkflowEngineContext(this);
             workflowEngineContext.setTaskId(taskId);
-            workflowEngineContext.setFormData(formData);
+            workflowEngineContext.setFormData(params);
             workflowEngineContext.setCurrentTaskDef(currentTaskDef);
             workflowActionListener.onRetrieveFormData(workflowEngineContext);
         }
 
-        return formData;
+        return params;
     }
 
     private WorkflowActionListener getWorkflowActionListenerByTaskId(String taskId) {
@@ -284,8 +284,8 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
 
     }
 
-    private String getChoiceFromFormData(Map<String, Object> formData) {
-        Object objChoice = formData.get(WorkflowChoiceOptions.STORE_KEY);
+    private String getChoiceFromFormData(Map<String, Object> params) {
+        Object objChoice = params.get(WorkflowChoiceOptions.STORE_KEY);
         return objChoice == null ? "" : objChoice.toString();
     }
 
