@@ -57,10 +57,11 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     public String startNew(String processDefinitionKey, String userId, String businessKey, Map<String, Object> params) {
         ensureFormDataNotNull(params);
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionKey(processDefinitionKey).latestVersion().singleResult();
+        params.put(ProcessMainVariableNames.PROC_BUSINESS_KEY, businessKey);
         params.put(ProcessMainVariableNames.PROC_DEF_KEY, processDefinition.getKey());
         params.put(ProcessMainVariableNames.PROC_TYPE, processDefinition.getName());
         params.put(ProcessMainVariableNames.PROC_CREATE_TIME, new Date());
-        params.put(ProcessMainVariableNames.PROC_CREATE_USERID, userId);
+        params.put(ProcessMainVariableNames.PROC_CREATE_USER_ID, userId);
         UserInfo userInfo = userManagementService.getUser(userId);
         params.put(ProcessMainVariableNames.PROC_CREATE_USER, userInfo.getUserName());
 
@@ -242,7 +243,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     }
 
     private TaskDef getNextTaskDef(String taskId, Map<String, Object> params) {
-        TaskDef taskDef = new TaskDef();
+        TaskDef taskDef = processDefinitionManager.getNextTaskDefByTaskId(taskId, params);
         return taskDef;
     }
 

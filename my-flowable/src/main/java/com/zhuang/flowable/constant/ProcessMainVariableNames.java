@@ -10,8 +10,10 @@ public class ProcessMainVariableNames {
 	
 	public static final String PROC_CREATE_TIME = "PROC_CREATE_TIME";
 
-	public static final String PROC_CREATE_USERID = "PROC_CREATE_USERID";
+	public static final String PROC_CREATE_USER_ID = "PROC_CREATE_USER_ID";
 	
 	public static final String PROC_CREATE_USER = "PROC_CREATE_USER";
+
+	public static final String PROC_BUSINESS_KEY = "PROC_BUSINESS_KEY";
 
 }

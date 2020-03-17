@@ -12,6 +12,7 @@ import com.zhuang.flowable.model.ProcDef;
 import com.zhuang.flowable.model.TaskInfo;
 import com.zhuang.flowable.service.UserManagementService;
 import com.zhuang.flowable.util.DateUtils;
+import com.zhuang.flowable.util.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
@@ -187,7 +188,7 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
             if (conditions.containsKey(ProcessMainVariableNames.PROC_DEF_KEY)) {
                 Object objProcDefKey = conditions.get(ProcessMainVariableNames.PROC_DEF_KEY);
                 if (objProcDefKey != null && !objProcDefKey.toString().trim().isEmpty()) {
-                    taskInfoQuery.processVariableValueEquals(ProcessMainVariableNames.PROC_DEF_KEY,objProcDefKey);
+                    taskInfoQuery.processVariableValueEquals(ProcessMainVariableNames.PROC_DEF_KEY, objProcDefKey);
                 }
             }
             if (conditions.containsKey(ProcessMainVariableNames.PROC_TYPE)) {
@@ -233,26 +234,13 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
     }
 
     private void fillFlowInfoModel(FlowInfo flowInfo, Map<String, Object> processVariables) {
-        if (processVariables.containsKey(ProcessMainVariableNames.PROC_DEF_KEY)) {
-            flowInfo.setDefKey(processVariables.get(ProcessMainVariableNames.PROC_DEF_KEY).toString());
-        }
-        if (processVariables.containsKey(ProcessMainVariableNames.PROC_TITLE)) {
-            flowInfo.setTitle(processVariables.get(ProcessMainVariableNames.PROC_TITLE).toString());
-        }
-        if (processVariables.containsKey(ProcessMainVariableNames.PROC_TYPE)) {
-            Object objProcType = processVariables.get(ProcessMainVariableNames.PROC_TYPE);
-            flowInfo.setType(objProcType == null ? "" : objProcType.toString());
-        }
-        if (processVariables.containsKey(ProcessMainVariableNames.PROC_CREATE_TIME)) {
-            flowInfo.setCreateTime((Date) processVariables.get(ProcessMainVariableNames.PROC_CREATE_TIME));
-        }
-        if (processVariables.containsKey(ProcessMainVariableNames.PROC_CREATE_USERID)) {
-            flowInfo.setCreateUserId(processVariables.get(ProcessMainVariableNames.PROC_CREATE_USERID).toString());
-        }
-        if (processVariables.containsKey(ProcessMainVariableNames.PROC_CREATE_USER) && processVariables.get(ProcessMainVariableNames.PROC_CREATE_USER) != null) {
-            flowInfo.setCreateUser(processVariables.get(ProcessMainVariableNames.PROC_CREATE_USER).toString());
-        }
+        flowInfo.setBusinessKey(MapUtils.getString(processVariables, ProcessMainVariableNames.PROC_BUSINESS_KEY));
+        flowInfo.setDefKey(MapUtils.getString(processVariables, ProcessMainVariableNames.PROC_DEF_KEY));
+        flowInfo.setTitle(MapUtils.getString(processVariables, ProcessMainVariableNames.PROC_TITLE));
+        flowInfo.setType(MapUtils.getString(processVariables, ProcessMainVariableNames.PROC_TYPE));
+        flowInfo.setCreateTime(MapUtils.getDate(processVariables, ProcessMainVariableNames.PROC_CREATE_TIME));
+        flowInfo.setCreateUserId(MapUtils.getString(processVariables, ProcessMainVariableNames.PROC_CREATE_USER_ID));
+        flowInfo.setCreateUser(MapUtils.getString(processVariables, ProcessMainVariableNames.PROC_CREATE_USER));
     }
-
 
 }

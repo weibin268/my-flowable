@@ -17,8 +17,7 @@ class FlowableWorkflowQueryTest extends MyFlowableTestApplicationTest {
 
     @Test
     void getMyTodoListPage() {
-
-        PageInfo<FlowInfo> flowInfoPageInfo= flowableWorkflowQuery.getMyTodoListPage("1", 1, 100, new HashMap<>());
+        PageInfo<FlowInfo> flowInfoPageInfo= flowableWorkflowQuery.getMyTodoListPage("zwb", 1, 100, new HashMap<>());
         System.out.println(flowInfoPageInfo);
     }
 }

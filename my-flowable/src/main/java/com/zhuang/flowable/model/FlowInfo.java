@@ -5,23 +5,15 @@ import java.util.Date;
 public class FlowInfo {
 	
 	private String taskId;
-	
 	private String businessKey;
-	
 	private String title;
-	
 	private String createUser;
-	
 	private String createUserId;
-	
 	private Date createTime;
-	
 	private String currentActivityName;
-	
 	private String type;
-
 	private String defKey;
-	
+
 	public String getTaskId() {
 		return taskId;
 	}
@@ -85,8 +77,7 @@ public class FlowInfo {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
-	
+
 	public String getDefKey() {
 		return defKey;
 	}
@@ -97,9 +88,16 @@ public class FlowInfo {
 
 	@Override
 	public String toString() {
-		return "FlowInfo [taskId=" + taskId + ", businessKey=" + businessKey + ", title=" + title + ", createUser="
-				+ createUser + ", createUserId=" + createUserId + ", createTime=" + createTime
-				+ ", currentActivityName=" + currentActivityName + ", type=" + type + ", defKey=" + defKey + "]";
+		return "FlowInfo{" +
+				"taskId='" + taskId + '\'' +
+				", businessKey='" + businessKey + '\'' +
+				", title='" + title + '\'' +
+				", createUser='" + createUser + '\'' +
+				", createUserId='" + createUserId + '\'' +
+				", createTime=" + createTime +
+				", currentActivityName='" + currentActivityName + '\'' +
+				", type='" + type + '\'' +
+				", defKey='" + defKey + '\'' +
+				'}';
 	}
-
 }
