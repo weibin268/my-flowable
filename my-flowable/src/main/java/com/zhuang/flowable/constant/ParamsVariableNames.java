@@ -1,6 +1,6 @@
 package com.zhuang.flowable.constant;
 
-public class FormDataVariableNames {
+public class ParamsVariableNames {
 
 	public static final String IS_FIRST_TASK = "isFirstTask";
 

@@ -10,7 +10,7 @@ public abstract class WorkflowEngineContext {
 	protected String taskId;
 	protected String comment;
 	protected List<String> nextUsers;
-	protected Map<String, Object> formData;
+	protected Map<String, Object> params;
 	protected WorkflowEngine workflowEngine;
 	protected TaskDef currentTaskDef;
 	protected TaskDef nextTaskDef;
@@ -40,12 +40,12 @@ public abstract class WorkflowEngineContext {
 		this.nextUsers = nextUsers;
 	}
 
-	public Map<String, Object> getFormData() {
-		return formData;
+	public Map<String, Object> getParams() {
+		return params;
 	}
 
-	public void setFormData(Map<String, Object> formData) {
-		this.formData = formData;
+	public void setParams(Map<String, Object> params) {
+		this.params = params;
 	}
 
 	public WorkflowEngine getWorkflowEngine() {

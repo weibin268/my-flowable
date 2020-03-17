@@ -52,7 +52,7 @@ public interface WorkflowActionListener {
 	 * 加载表单数据
 	 * @param context
 	 */
-	void onRetrieveFormData(WorkflowEngineContext context);
+	void onRetrieveParams(WorkflowEngineContext context);
 
 	String key();
 }

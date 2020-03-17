@@ -17,24 +17,11 @@ public class FlowableWorkflowEngineContext extends WorkflowEngineContext {
 	
 	@Override
 	public TaskDef getCurrentTaskDef() {
-		
-		/*ActivitiWorkflowEngine activitiWorkflowEngine = (ActivitiWorkflowEngine) workflowEngine;
-		Task task = activitiWorkflowEngine.getTaskService().createTaskQuery().taskId(currentTask.getId())
-				.singleResult();
-		
-		currentTask.setName(task.getName());*/
-		
 		return currentTaskDef;
 	}
 	
 	@Override	
 	public TaskDef getNextTaskDef() {
-		
-		FlowableWorkflowEngine activitiWorkflowEngine = (FlowableWorkflowEngine) workflowEngine;
-		
-//		Map<String, Object> params=activitiWorkflowEngine.getEnvVarFromFormData(formData);
-//		Task nextTask = processDefinitionManager.getNextTaskDefinition(currentTask.getId(), params);
-		
 		return nextTaskDef;
 	}
 }

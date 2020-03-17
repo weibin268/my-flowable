@@ -55,7 +55,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
 
     @Override
     public String startNew(String processDefinitionKey, String userId, String businessKey, Map<String, Object> params) {
-        ensureFormDataNotNull(params);
+        ensureParamsNotNull(params);
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionKey(processDefinitionKey).latestVersion().singleResult();
         params.put(ProcessMainVariableNames.PROC_BUSINESS_KEY, businessKey);
         params.put(ProcessMainVariableNames.PROC_DEF_KEY, processDefinition.getKey());
@@ -78,7 +78,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
 
     @Override
     public void save(String taskId, String comment, Map<String, Object> params) {
-        ensureFormDataNotNull(params);
+        ensureParamsNotNull(params);
         taskService.setVariables(taskId, params);
         List<String> nextUsers = new ArrayList<String>();
         WorkflowActionListener workflowActionListener = getWorkflowActionListenerByTaskId(taskId);
@@ -86,7 +86,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         workflowEngineContext.setTaskId(taskId);
         workflowEngineContext.setComment(comment);
         workflowEngineContext.setNextUsers(nextUsers);
-        workflowEngineContext.setFormData(params);
+        workflowEngineContext.setParams(params);
         workflowEngineContext.setCurrentTaskDef(processDefinitionManager.getTaskDefByTaskId(taskId));
         workflowEngineContext.setNextTaskDef(getNextTaskDef(taskId, params));
         if (workflowActionListener != null) {
@@ -96,9 +96,9 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
 
     @Override
     public void submit(String taskId, String userId, List<String> nextUsers, String comment, Map<String, Object> params) {
-        params = ensureFormDataNotNull(params);
+        params = ensureParamsNotNull(params);
         TaskDef currentTaskDef = processDefinitionManager.getTaskDefByTaskId(taskId);
-        String choice = getChoiceFromFormData(params);
+        String choice = getChoiceFromParams(params);
 
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 
@@ -112,7 +112,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         workflowEngineContext.setTaskId(taskId);
         workflowEngineContext.setComment(comment);
         workflowEngineContext.setNextUsers(nextUsers);
-        workflowEngineContext.setFormData(params);
+        workflowEngineContext.setParams(params);
         workflowEngineContext.setCurrentTaskDef(currentTaskDef);
         workflowEngineContext.setNextTaskDef(getNextTaskDef(taskId, params));
         workflowEngineContext.setChoice(choice);
@@ -131,16 +131,16 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
 
     @Override
     public void delete(String taskId, String comment, Map<String, Object> params) {
-        params = ensureFormDataNotNull(params);
+        params = ensureParamsNotNull(params);
 
         WorkflowActionListener workflowActionListener = getWorkflowActionListenerByTaskId(taskId);
 
         WorkflowEngineContext workflowEngineContext = new FlowableWorkflowEngineContext(this);
         workflowEngineContext.setTaskId(taskId);
         workflowEngineContext.setComment(comment);
-        workflowEngineContext.setFormData(params);
+        workflowEngineContext.setParams(params);
         workflowEngineContext.setCurrentTaskDef(processDefinitionManager.getTaskDefByTaskId(taskId));
-        workflowEngineContext.setChoice(getChoiceFromFormData(params));
+        workflowEngineContext.setChoice(getChoiceFromParams(params));
 
         if (workflowActionListener != null) {
             workflowActionListener.beforeDelete(workflowEngineContext);
@@ -157,7 +157,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     public NextTaskInfo retrieveNextTaskInfo(String taskId, Map<String, Object> params) {
         NextTaskInfo result = new NextTaskInfo();
         List<UserInfo> userInfoList = new ArrayList<UserInfo>();
-        String choice = getChoiceFromFormData(params);
+        String choice = getChoiceFromParams(params);
         TaskDef currentTaskDef = processDefinitionManager.getTaskDefByTaskId(taskId);
 
         if (currentTaskDef.getIsCountersign()) {
@@ -170,7 +170,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
 
         WorkflowEngineContext workflowEngineContext = new FlowableWorkflowEngineContext(this);
         workflowEngineContext.setTaskId(taskId);
-        workflowEngineContext.setFormData(params);
+        workflowEngineContext.setParams(params);
         workflowEngineContext.setCurrentTaskDef(currentTaskDef);
         workflowEngineContext.setNextTaskDef(nextTaskDef);
         workflowEngineContext.setChoice(choice);
@@ -212,20 +212,20 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         TaskDef currentTaskDef = processDefinitionManager.getTaskDefByTaskId(taskId);
         ProcessDefinition processDefinition = processDefinitionManager.getProcessDefinitionEntityByTaskId(taskId);
 
-        params.put(FormDataVariableNames.IS_FIRST_TASK, processDefinitionManager.isFirstTask(taskId));
-        params.put(FormDataVariableNames.CURRENT_TASK_KEY, currentTaskDef.getKey());
-        params.put(FormDataVariableNames.CURRENT_TASK_NAME, currentTaskDef.getName());
-        params.put(FormDataVariableNames.IS_RUNNING_TASK, userTaskManager.isRunningTask(taskId));
-        params.put(FormDataVariableNames.PRO_DEF_KEY, processDefinition.getKey());
-        params.put(FormDataVariableNames.PRO_DEF_NAME, processDefinition.getName());
+        params.put(ParamsVariableNames.IS_FIRST_TASK, processDefinitionManager.isFirstTask(taskId));
+        params.put(ParamsVariableNames.CURRENT_TASK_KEY, currentTaskDef.getKey());
+        params.put(ParamsVariableNames.CURRENT_TASK_NAME, currentTaskDef.getName());
+        params.put(ParamsVariableNames.IS_RUNNING_TASK, userTaskManager.isRunningTask(taskId));
+        params.put(ParamsVariableNames.PRO_DEF_KEY, processDefinition.getKey());
+        params.put(ParamsVariableNames.PRO_DEF_NAME, processDefinition.getName());
 
         WorkflowActionListener workflowActionListener = getWorkflowActionListenerByTaskId(taskId);
         if (workflowActionListener != null) {
             WorkflowEngineContext workflowEngineContext = new FlowableWorkflowEngineContext(this);
             workflowEngineContext.setTaskId(taskId);
-            workflowEngineContext.setFormData(params);
+            workflowEngineContext.setParams(params);
             workflowEngineContext.setCurrentTaskDef(currentTaskDef);
-            workflowActionListener.onRetrieveFormData(workflowEngineContext);
+            workflowActionListener.onRetrieveParams(workflowEngineContext);
         }
 
         return params;
@@ -247,7 +247,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         return taskDef;
     }
 
-    private Map<String, Object> ensureFormDataNotNull(Map<String, Object> params) {
+    private Map<String, Object> ensureParamsNotNull(Map<String, Object> params) {
         if (params == null) {
             params = new HashMap<>();
         }
@@ -284,7 +284,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
 
     }
 
-    private String getChoiceFromFormData(Map<String, Object> params) {
+    private String getChoiceFromParams(Map<String, Object> params) {
         Object objChoice = params.get(WorkflowChoiceOptions.STORE_KEY);
         return objChoice == null ? "" : objChoice.toString();
     }

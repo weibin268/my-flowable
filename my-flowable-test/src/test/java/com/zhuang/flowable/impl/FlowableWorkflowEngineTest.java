@@ -17,15 +17,15 @@ class FlowableWorkflowEngineTest extends MyFlowableTestApplicationTest {
 
     @Test
     void startNew() {
-        Map<String, Object> formData = new HashMap<>();
-        String result = flowableWorkflowEngine.startNew("test01", "zwb", "1", formData);
+        Map<String, Object> params = new HashMap<>();
+        String result = flowableWorkflowEngine.startNew("test01", "zwb", "1", params);
         System.out.println(result);
     }
 
     @Test
     void startNew2() {
-        Map<String, Object> formData = new HashMap<>();
-        String result = flowableWorkflowEngine.startNew("CountersignTest", "1", "1", formData);
+        Map<String, Object> params = new HashMap<>();
+        String result = flowableWorkflowEngine.startNew("CountersignTest", "1", "1", params);
         System.out.println(result);
     }
 
