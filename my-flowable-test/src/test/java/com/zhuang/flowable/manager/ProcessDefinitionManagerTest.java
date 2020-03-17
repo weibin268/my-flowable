@@ -3,10 +3,12 @@ package com.zhuang.flowable.manager;
 import com.zhuang.flowable.MyFlowableTestApplicationTest;
 import com.zhuang.flowable.model.TaskDef;
 import org.flowable.bpmn.model.FlowNode;
+import org.flowable.engine.repository.ProcessDefinition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 class ProcessDefinitionManagerTest extends MyFlowableTestApplicationTest {
@@ -34,4 +36,12 @@ class ProcessDefinitionManagerTest extends MyFlowableTestApplicationTest {
         FlowNode flowNode = processDefinitionManager.getFlowNodeByTaskId("f3df49d2-35de-11ea-8f64-18602477cc91");
         System.out.println(flowNode);
     }
+
+    @Test
+    void getProcessDefinitionList() {
+        List<ProcessDefinition> processDefinitionList = processDefinitionManager.getProcessDefinitionList();
+        System.out.println(processDefinitionList);
+    }
+
+
 }
