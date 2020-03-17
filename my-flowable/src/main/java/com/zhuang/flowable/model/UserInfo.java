@@ -3,11 +3,8 @@ package com.zhuang.flowable.model;
 public class UserInfo {
 
 	private String userId;
-
 	private String userName;
-
 	private String deptId;
-
 	private String deptName;
 
 	public String getUserId() {

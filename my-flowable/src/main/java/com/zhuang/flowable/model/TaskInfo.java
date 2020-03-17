@@ -5,19 +5,12 @@ import java.util.Date;
 public class TaskInfo {
 
 	private String id;
-
 	private String name;
-	
 	private String key;
-	
 	private String userId;
-	
 	private String userName;
-	
 	private Date startTime;
-	
 	private Date endTime;
-	
 	private String comment;
 	
 	public String getId() {

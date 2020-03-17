@@ -5,25 +5,16 @@ import java.util.List;
 public class PageInfo<T> {
 
 	List<T> list;
-
 	private int pageNo;
-
 	private int pageSize;
-
 	private int totalRows;
-
 	private int totalPages;
-
 	private int pageStartRow;
-
 	private int pageEndRow;
-
 	private boolean hasNextPage;
-
 	private boolean hasPreviousPage;
 
 	public PageInfo() {
-
 	}
 
 	public PageInfo(int pageNo, int pageSize, int totalRows, List<T> list) {

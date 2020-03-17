@@ -5,19 +5,12 @@ import java.util.Date;
 public class DeploymentInfo {
 
 	private String deployId;
-	
 	private String deployName;
-
 	private String deployCategory;
-	
 	private Date deployTime;
-	
 	private String procDefName;
-	
 	private String procDefKey;
-
 	private int procDefVersion;
-
 	private String procDefDescription;
 
 	public Date getDeployTime() {
@@ -83,6 +76,5 @@ public class DeploymentInfo {
 	public void setProcDefDescription(String procDefDescription) {
 		this.procDefDescription = procDefDescription;
 	}
-	
-	
+
 }

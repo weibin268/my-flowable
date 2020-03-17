@@ -5,11 +5,8 @@ import java.util.List;
 public class NextTaskInfo {
 	
 	private String taskKey;
-
 	private String taskName;
-
 	private Boolean isCountersign;
-
 	private List<UserInfo> users;
 
 	public String getTaskKey() {
