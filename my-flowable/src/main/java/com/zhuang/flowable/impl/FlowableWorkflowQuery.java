@@ -13,6 +13,7 @@ import com.zhuang.flowable.model.TaskInfo;
 import com.zhuang.flowable.service.UserManagementService;
 import com.zhuang.flowable.util.DateUtils;
 import com.zhuang.flowable.util.MapUtils;
+import com.zhuang.flowable.util.VariableNameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
@@ -184,52 +185,32 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
     }
 
     private void setTaskQueryConditions(TaskInfoQuery taskInfoQuery, Map<String, Object> conditions) {
-        if (conditions != null) {
-            if (conditions.containsKey(ProcessMainVariableNames.PROC_DEF_KEY)) {
-                Object objProcDefKey = conditions.get(ProcessMainVariableNames.PROC_DEF_KEY);
-                if (objProcDefKey != null && !objProcDefKey.toString().trim().isEmpty()) {
-                    taskInfoQuery.processVariableValueEquals(ProcessMainVariableNames.PROC_DEF_KEY, objProcDefKey);
-                }
-            }
-            if (conditions.containsKey(ProcessMainVariableNames.PROC_TYPE)) {
-                Object objProcType = conditions.get(ProcessMainVariableNames.PROC_TYPE);
-                if (objProcType != null && !objProcType.toString().trim().isEmpty()) {
-                    taskInfoQuery.processVariableValueEquals(ProcessMainVariableNames.PROC_TYPE,
-                            objProcType);
-                }
-            }
-            if (conditions.containsKey(ProcessMainVariableNames.PROC_TITLE)) {
-                Object objProcTitle = conditions.get(ProcessMainVariableNames.PROC_TITLE);
-                if (objProcTitle != null && !objProcTitle.toString().trim().isEmpty()) {
-                    taskInfoQuery.processVariableValueLike(ProcessMainVariableNames.PROC_TITLE,
-                            "%" + objProcTitle.toString() + "%");
-                }
-            }
-            if (conditions.containsKey(ProcessMainVariableNames.PROC_CREATE_USER)) {
-                Object objProcCreateUserName = conditions.get(ProcessMainVariableNames.PROC_CREATE_USER);
-                if (objProcCreateUserName != null && !objProcCreateUserName.toString().trim().isEmpty()) {
-                    taskInfoQuery.processVariableValueLike(ProcessMainVariableNames.PROC_CREATE_USER,
-                            "%" + objProcCreateUserName.toString() + "%");
-                }
-            }
-            String proCreateTimeStart = ProcessMainVariableNames.PROC_CREATE_TIME + "_START";
-            if (conditions.containsKey(proCreateTimeStart)) {
-                Object objProcCreateTimeStart = conditions.get(proCreateTimeStart);
-                if (objProcCreateTimeStart != null && !objProcCreateTimeStart.toString().trim().isEmpty()) {
-                    Date dProcCreateTimeStart = null;
-                    dProcCreateTimeStart = DateUtils.parseDate(objProcCreateTimeStart.toString() + " 00:00:00");
-                    taskInfoQuery.processVariableValueGreaterThanOrEqual(ProcessMainVariableNames.PROC_CREATE_TIME, dProcCreateTimeStart);
-                }
-            }
-            String proCreateTimeEnd = ProcessMainVariableNames.PROC_CREATE_TIME + "_END";
-            if (conditions.containsKey(proCreateTimeEnd)) {
-                Object objProcCreateTimeEnd = conditions.get(proCreateTimeEnd);
-                if (objProcCreateTimeEnd != null && !objProcCreateTimeEnd.toString().trim().isEmpty()) {
-                    Date dProcCreateTimeEnd = null;
-                    dProcCreateTimeEnd = DateUtils.parseDate(objProcCreateTimeEnd.toString() + " 23:59:59");
-                    taskInfoQuery.processVariableValueLessThanOrEqual(ProcessMainVariableNames.PROC_CREATE_TIME, dProcCreateTimeEnd);
-                }
-            }
+        if (conditions == null) return;
+        String proDefKey = MapUtils.getString(conditions, ProcessMainVariableNames.PROC_DEF_KEY);
+        if (!StringUtils.isEmpty(proDefKey)) {
+            taskInfoQuery.processVariableValueEquals(ProcessMainVariableNames.PROC_DEF_KEY, proDefKey);
+        }
+        String proType = MapUtils.getString(conditions, ProcessMainVariableNames.PROC_TYPE);
+        if (!StringUtils.isEmpty(proType)) {
+            taskInfoQuery.processVariableValueEquals(ProcessMainVariableNames.PROC_TYPE, proType);
+        }
+        String proTitle = MapUtils.getString(conditions, ProcessMainVariableNames.PROC_TITLE);
+        if (!StringUtils.isEmpty(proTitle)) {
+            taskInfoQuery.processVariableValueLike(ProcessMainVariableNames.PROC_TITLE, "%" + proTitle + "%");
+        }
+        String proCreateUser = MapUtils.getString(conditions, ProcessMainVariableNames.PROC_CREATE_USER);
+        if (!StringUtils.isEmpty(proCreateUser)) {
+            taskInfoQuery.processVariableValueLike(ProcessMainVariableNames.PROC_CREATE_USER, "%" + proCreateUser + "%");
+        }
+        String proCreateTimeStart = MapUtils.getString(conditions, VariableNameUtils.toStartName(ProcessMainVariableNames.PROC_CREATE_TIME));
+        if (!StringUtils.isEmpty(proCreateTimeStart)) {
+            Date dProcCreateTimeStart = DateUtils.parseDate(proCreateTimeStart + " 00:00:00");
+            taskInfoQuery.processVariableValueGreaterThanOrEqual(ProcessMainVariableNames.PROC_CREATE_TIME, dProcCreateTimeStart);
+        }
+        String proCreateTimeEnd = MapUtils.getString(conditions, VariableNameUtils.toEndName(ProcessMainVariableNames.PROC_CREATE_TIME));
+        if (!StringUtils.isEmpty(proCreateTimeEnd)) {
+            Date dProcCreateTimeEnd = DateUtils.parseDate(proCreateTimeEnd.toString() + " 23:59:59");
+            taskInfoQuery.processVariableValueLessThanOrEqual(ProcessMainVariableNames.PROC_CREATE_TIME, dProcCreateTimeEnd);
         }
     }
 
