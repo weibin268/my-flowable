@@ -45,4 +45,9 @@ class FlowableWorkflowEngineTest extends MyFlowableTestApplicationTest {
         System.out.println(nextTaskInfo);
     }
 
+    @Test
+    void retrieveParams(){
+        Map<String, Object> params = flowableWorkflowEngine.retrieveParams("8e5d4359-685f-11ea-87ef-34f39a2852bc");
+        System.out.println(params);
+    }
 }
