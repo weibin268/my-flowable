@@ -50,8 +50,12 @@ public class TaskDef {
 
 	@Override
 	public String toString() {
-		return "TaskDefModel [key=" + key + ", name=" + name + ", assignee=" + assignee + ", isCountersign="
-				+ isCountersign + "]";
+		return "TaskDef{" +
+				"key='" + key + '\'' +
+				", name='" + name + '\'' +
+				", assignee='" + assignee + '\'' +
+				", candidateUser='" + candidateUser + '\'' +
+				", isCountersign=" + isCountersign +
+				'}';
 	}
-	
 }

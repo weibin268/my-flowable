@@ -125,6 +125,7 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
             ProcDef procDef = new ProcDef();
             procDef.setKey(processDefinition.getKey());
             procDef.setName(processDefinition.getName());
+            procDef.setCategory(processDefinition.getCategory());
             procDef.setDescription(processDefinition.getDescription());
             procDefs.add(procDef);
         }

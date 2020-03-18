@@ -77,4 +77,17 @@ public class DeploymentInfo {
 		this.procDefDescription = procDefDescription;
 	}
 
+	@Override
+	public String toString() {
+		return "DeploymentInfo{" +
+				"deployId='" + deployId + '\'' +
+				", deployName='" + deployName + '\'' +
+				", deployCategory='" + deployCategory + '\'' +
+				", deployTime=" + deployTime +
+				", procDefName='" + procDefName + '\'' +
+				", procDefKey='" + procDefKey + '\'' +
+				", procDefVersion=" + procDefVersion +
+				", procDefDescription='" + procDefDescription + '\'' +
+				'}';
+	}
 }

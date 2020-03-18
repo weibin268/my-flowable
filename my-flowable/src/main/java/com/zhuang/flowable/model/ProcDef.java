@@ -4,6 +4,7 @@ public class ProcDef {
 	
 	private String key;
 	private String name;
+	private String category;
 	private String description;
 	
 	public String getKey() {
@@ -30,9 +31,21 @@ public class ProcDef {
 		this.description = description;
 	}
 
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	@Override
 	public String toString() {
-		return "ProcDefModel [key=" + key + ", name=" + name + ", description=" + description + "]";
+		return "ProcDef{" +
+				"key='" + key + '\'' +
+				", name='" + name + '\'' +
+				", category='" + category + '\'' +
+				", description='" + description + '\'' +
+				'}';
 	}
-	
 }

@@ -4,6 +4,10 @@ import com.zhuang.flowable.MyFlowableTestApplicationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DeploymentManagerTest extends MyFlowableTestApplicationTest {
@@ -13,6 +17,12 @@ class DeploymentManagerTest extends MyFlowableTestApplicationTest {
 
     @Test
     void deployByClasspathResource() {
-        deploymentManager.deployByClasspathResource("countersign-test.bpmn","countersign-test");
+        deploymentManager.deployByClasspathResource("countersign-test.bpmn");
+    }
+
+    @Test
+    void deployByInputStream() throws IOException {
+        InputStream inputStream = getClass().getResource("/bpmn/test01.bpmn").openStream();
+        deploymentManager.deployByInputStream(inputStream, "test01.bpmn");
     }
 }

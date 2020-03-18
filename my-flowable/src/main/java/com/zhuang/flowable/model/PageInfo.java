@@ -107,6 +107,18 @@ public class PageInfo<T> {
 		this.hasPreviousPage = hasPreviousPage;
 	}
 
-	
-	
+	@Override
+	public String toString() {
+		return "PageInfo{" +
+				"list=" + list +
+				", pageNo=" + pageNo +
+				", pageSize=" + pageSize +
+				", totalRows=" + totalRows +
+				", totalPages=" + totalPages +
+				", pageStartRow=" + pageStartRow +
+				", pageEndRow=" + pageEndRow +
+				", hasNextPage=" + hasNextPage +
+				", hasPreviousPage=" + hasPreviousPage +
+				'}';
+	}
 }

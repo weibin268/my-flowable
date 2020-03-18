@@ -1,8 +1,10 @@
 package com.zhuang.flowable.manager;
 
 import org.flowable.engine.RepositoryService;
+import org.flowable.engine.repository.DeploymentBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.io.InputStream;
 
@@ -22,12 +24,14 @@ public class DeploymentManager {
     @Autowired
     private RepositoryService repositoryService;
 
-    public void deployByClasspathResource(String resourceName, String deployName) {
+    public void deployByClasspathResource(String resourceName) {
         String resourcePath = basePath + resourceName;
-        repositoryService.createDeployment().name(deployName).addClasspathResource(resourcePath).deploy();
+        repositoryService.createDeployment().addClasspathResource(resourcePath).deploy();
     }
 
-    public void deployByInputStream(String resourceName, InputStream inputStream) {
-        repositoryService.createDeployment().name(resourceName).addInputStream(resourceName, inputStream).deploy();
+    public void deployByInputStream(InputStream inputStream, String resourceName) {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        deploymentBuilder.addInputStream(resourceName, inputStream).deploy();
     }
+
 }
