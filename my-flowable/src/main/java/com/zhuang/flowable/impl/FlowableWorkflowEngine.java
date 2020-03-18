@@ -3,7 +3,7 @@ package com.zhuang.flowable.impl;
 import com.zhuang.flowable.BaseWorkflowEngine;
 import com.zhuang.flowable.NextTaskUsersHandler;
 import com.zhuang.flowable.WorkflowActionListener;
-import com.zhuang.flowable.WorkflowEngineContext;
+import com.zhuang.flowable.WorkflowContext;
 import com.zhuang.flowable.constant.*;
 import com.zhuang.flowable.exception.HandlerNotFoundException;
 import com.zhuang.flowable.manager.ProcessDefinitionManager;
@@ -82,15 +82,15 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         taskService.setVariables(taskId, params);
         List<String> nextUsers = new ArrayList<String>();
         WorkflowActionListener workflowActionListener = getWorkflowActionListenerByTaskId(taskId);
-        WorkflowEngineContext workflowEngineContext = new FlowableWorkflowEngineContext(this);
-        workflowEngineContext.setTaskId(taskId);
-        workflowEngineContext.setComment(comment);
-        workflowEngineContext.setNextUsers(nextUsers);
-        workflowEngineContext.setParams(params);
-        workflowEngineContext.setCurrentTaskDef(processDefinitionManager.getTaskDefByTaskId(taskId));
-        workflowEngineContext.setNextTaskDef(getNextTaskDef(taskId, params));
+        WorkflowContext workflowContext = new FlowableWorkflowContext(this);
+        workflowContext.setTaskId(taskId);
+        workflowContext.setComment(comment);
+        workflowContext.setNextUsers(nextUsers);
+        workflowContext.setParams(params);
+        workflowContext.setCurrentTaskDef(processDefinitionManager.getTaskDefByTaskId(taskId));
+        workflowContext.setNextTaskDef(getNextTaskDef(taskId, params));
         if (workflowActionListener != null) {
-            workflowActionListener.onSave(workflowEngineContext);
+            workflowActionListener.onSave(workflowContext);
         }
     }
 
@@ -108,23 +108,23 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
 
         WorkflowActionListener workflowActionListener = getWorkflowActionListenerByTaskId(taskId);
 
-        WorkflowEngineContext workflowEngineContext = new FlowableWorkflowEngineContext(this);
-        workflowEngineContext.setTaskId(taskId);
-        workflowEngineContext.setComment(comment);
-        workflowEngineContext.setNextUsers(nextUsers);
-        workflowEngineContext.setParams(params);
-        workflowEngineContext.setCurrentTaskDef(currentTaskDef);
-        workflowEngineContext.setNextTaskDef(getNextTaskDef(taskId, params));
-        workflowEngineContext.setChoice(choice);
+        WorkflowContext workflowContext = new FlowableWorkflowContext(this);
+        workflowContext.setTaskId(taskId);
+        workflowContext.setComment(comment);
+        workflowContext.setNextUsers(nextUsers);
+        workflowContext.setParams(params);
+        workflowContext.setCurrentTaskDef(currentTaskDef);
+        workflowContext.setNextTaskDef(getNextTaskDef(taskId, params));
+        workflowContext.setChoice(choice);
 
         if (workflowActionListener != null) {
-            workflowActionListener.beforeSubmit(workflowEngineContext);
+            workflowActionListener.beforeSubmit(workflowContext);
         }
 
-        run(task, userId, nextUsers, comment, params, workflowEngineContext);
+        run(task, userId, nextUsers, comment, params, workflowContext);
 
         if (workflowActionListener != null) {
-            workflowActionListener.afterSubmit(workflowEngineContext);
+            workflowActionListener.afterSubmit(workflowContext);
         }
 
     }
@@ -135,21 +135,21 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
 
         WorkflowActionListener workflowActionListener = getWorkflowActionListenerByTaskId(taskId);
 
-        WorkflowEngineContext workflowEngineContext = new FlowableWorkflowEngineContext(this);
-        workflowEngineContext.setTaskId(taskId);
-        workflowEngineContext.setComment(comment);
-        workflowEngineContext.setParams(params);
-        workflowEngineContext.setCurrentTaskDef(processDefinitionManager.getTaskDefByTaskId(taskId));
-        workflowEngineContext.setChoice(getChoiceFromParams(params));
+        WorkflowContext workflowContext = new FlowableWorkflowContext(this);
+        workflowContext.setTaskId(taskId);
+        workflowContext.setComment(comment);
+        workflowContext.setParams(params);
+        workflowContext.setCurrentTaskDef(processDefinitionManager.getTaskDefByTaskId(taskId));
+        workflowContext.setChoice(getChoiceFromParams(params));
 
         if (workflowActionListener != null) {
-            workflowActionListener.beforeDelete(workflowEngineContext);
+            workflowActionListener.beforeDelete(workflowContext);
         }
 
         processInstanceManager.deleteProcessInstanceByTaskId(taskId, comment);
 
         if (workflowActionListener != null) {
-            workflowActionListener.afterDelete(workflowEngineContext);
+            workflowActionListener.afterDelete(workflowContext);
         }
     }
 
@@ -168,13 +168,13 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         result.setTaskKey(nextTaskDef.getKey());
         result.setTaskName(nextTaskDef.getName());
 
-        WorkflowEngineContext workflowEngineContext = new FlowableWorkflowEngineContext(this);
-        workflowEngineContext.setTaskId(taskId);
-        workflowEngineContext.setParams(params);
-        workflowEngineContext.setCurrentTaskDef(currentTaskDef);
-        workflowEngineContext.setNextTaskDef(nextTaskDef);
-        workflowEngineContext.setChoice(choice);
-        initNextTaskUsers(userInfoList, taskId, workflowEngineContext);
+        WorkflowContext workflowContext = new FlowableWorkflowContext(this);
+        workflowContext.setTaskId(taskId);
+        workflowContext.setParams(params);
+        workflowContext.setCurrentTaskDef(currentTaskDef);
+        workflowContext.setNextTaskDef(nextTaskDef);
+        workflowContext.setChoice(choice);
+        initNextTaskUsers(userInfoList, taskId, workflowContext);
         String configValue = null;
         if (nextTaskDef.getIsCountersign()) {
             configValue = nextTaskDef.getCandidateUser();
@@ -192,13 +192,13 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
             if (nextTaskUsersHandler == null) {
                 throw new HandlerNotFoundException("在“nextTaskUsersHandlers”中找不到key为“" + handlerKey + "”的NextTaskUsersHandler！");
             } else {
-                workflowEngineContext.setComment(handlerParams);
-                userInfoList.addAll(nextTaskUsersHandler.execute(workflowEngineContext));
+                workflowContext.setComment(handlerParams);
+                userInfoList.addAll(nextTaskUsersHandler.execute(workflowContext));
             }
         }
         WorkflowActionListener workflowActionListener = getWorkflowActionListenerByTaskId(taskId);
         if (workflowActionListener != null) {
-            workflowActionListener.onRetrieveNextTaskUsers(userInfoList, workflowEngineContext);
+            workflowActionListener.onRetrieveNextTaskUsers(userInfoList, workflowContext);
         }
         result.setIsCountersign(nextTaskDef.getIsCountersign());
         result.setUsers(userInfoList);
@@ -221,11 +221,11 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
 
         WorkflowActionListener workflowActionListener = getWorkflowActionListenerByTaskId(taskId);
         if (workflowActionListener != null) {
-            WorkflowEngineContext workflowEngineContext = new FlowableWorkflowEngineContext(this);
-            workflowEngineContext.setTaskId(taskId);
-            workflowEngineContext.setParams(params);
-            workflowEngineContext.setCurrentTaskDef(currentTaskDef);
-            workflowActionListener.onRetrieveParams(workflowEngineContext);
+            WorkflowContext workflowContext = new FlowableWorkflowContext(this);
+            workflowContext.setTaskId(taskId);
+            workflowContext.setParams(params);
+            workflowContext.setCurrentTaskDef(currentTaskDef);
+            workflowActionListener.onRetrieveParams(workflowContext);
         }
 
         return params;
@@ -289,10 +289,10 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         return objChoice == null ? "" : objChoice.toString();
     }
 
-    private void run(Task task, String userId, List<String> nextUsers, String comment, Map<String, Object> envVariables, WorkflowEngineContext workflowEngineContext) {
+    private void run(Task task, String userId, List<String> nextUsers, String comment, Map<String, Object> envVariables, WorkflowContext workflowContext) {
 
-        Boolean isCountersign4Next = workflowEngineContext.getNextTaskDef().getIsCountersign();
-        Boolean isCountersign4Current = workflowEngineContext.getCurrentTaskDef().getIsCountersign();
+        Boolean isCountersign4Next = workflowContext.getNextTaskDef().getIsCountersign();
+        Boolean isCountersign4Current = workflowContext.getCurrentTaskDef().getIsCountersign();
 
         if (comment != null) {
             taskService.addComment(task.getId(), task.getProcessInstanceId(), comment);
@@ -338,9 +338,9 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         }
     }
 
-    private void initNextTaskUsers(List<UserInfo> userInfos, String taskId, WorkflowEngineContext workflowEngineContext) {
-        if (workflowEngineContext.getChoice().equals(WorkflowChoiceOptions.BACK)) {
-            String nextTaskUser = userTaskManager.getTaskAssignee(userTaskManager.getProcessInstanceId(taskId), workflowEngineContext.getNextTaskDef().getKey());
+    private void initNextTaskUsers(List<UserInfo> userInfos, String taskId, WorkflowContext workflowContext) {
+        if (workflowContext.getChoice().equals(WorkflowChoiceOptions.BACK)) {
+            String nextTaskUser = userTaskManager.getTaskAssignee(userTaskManager.getProcessInstanceId(taskId), workflowContext.getNextTaskDef().getKey());
             if (nextTaskUser != null) {
                 UserInfo userInfo = userManagementService.getUser(nextTaskUser);
                 userInfos.add(userInfo);

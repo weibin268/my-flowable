@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface NextTaskUsersHandler {
 
-    List<UserInfo> execute(WorkflowEngineContext workflowEngineContext);
+    List<UserInfo> execute(WorkflowContext workflowContext);
 
     String key();
 }

@@ -1,17 +1,14 @@
 package com.zhuang.flowable.impl;
 
 import com.zhuang.flowable.WorkflowEngine;
-import com.zhuang.flowable.WorkflowEngineContext;
+import com.zhuang.flowable.WorkflowContext;
 import com.zhuang.flowable.manager.ProcessDefinitionManager;
 import com.zhuang.flowable.model.TaskDef;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class FlowableWorkflowEngineContext extends WorkflowEngineContext {
+public class FlowableWorkflowContext extends WorkflowContext {
 
-	@Autowired
-	private ProcessDefinitionManager processDefinitionManager;
-
-	public FlowableWorkflowEngineContext(WorkflowEngine workflowEngine) {
+	public FlowableWorkflowContext(WorkflowEngine workflowEngine) {
 		super(workflowEngine);
 	}
 	
