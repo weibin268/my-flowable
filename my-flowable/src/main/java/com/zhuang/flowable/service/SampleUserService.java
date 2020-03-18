@@ -1,4 +1,4 @@
-package com.zhuang.flowable.sample;
+package com.zhuang.flowable.service;
 
 import com.zhuang.flowable.model.UserInfo;
 import com.zhuang.flowable.service.UserService;

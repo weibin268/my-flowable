@@ -1,6 +1,6 @@
-package com.zhuang.flowable.sample;
+package com.zhuang.flowable.handler;
 
-import com.zhuang.flowable.NextTaskUsersHandler;
+import com.zhuang.flowable.handler.NextTaskUsersHandler;
 import com.zhuang.flowable.WorkflowContext;
 import com.zhuang.flowable.model.UserInfo;
 
@@ -23,7 +23,7 @@ public class SampleNextTaskUserHandler implements NextTaskUsersHandler {
 
     @Override
     public String key() {
-        return "roleIds";
+        return "$roleIds";
     }
 
 }

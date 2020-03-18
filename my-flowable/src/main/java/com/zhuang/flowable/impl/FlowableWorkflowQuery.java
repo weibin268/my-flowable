@@ -173,8 +173,8 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
                     taskInfo.setId(EndTaskVariableNames.ID);
                     taskInfo.setKey(EndTaskVariableNames.KEY);
                     taskInfo.setName(EndTaskVariableNames.NAME);
-                    taskInfo.setUserId(EndTaskVariableNames.USERID);
-                    taskInfo.setUserName(EndTaskVariableNames.USERNAME);
+                    taskInfo.setUserId(EndTaskVariableNames.USER_ID);
+                    taskInfo.setUserName(EndTaskVariableNames.USER_NAME);
                     taskInfo.setStartTime(lastTask.getEndTime());
                     taskInfo.setEndTime(lastTask.getEndTime());
                     taskInfo.setComment(EndTaskVariableNames.COMMENT);

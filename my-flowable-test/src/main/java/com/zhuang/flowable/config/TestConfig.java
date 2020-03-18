@@ -1,7 +1,7 @@
 package com.zhuang.flowable.config;
 
-import com.zhuang.flowable.sample.SampleNextTaskUserHandler;
-import com.zhuang.flowable.sample.SampleUserService;
+import com.zhuang.flowable.handler.SampleNextTaskUserHandler;
+import com.zhuang.flowable.service.SampleUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
