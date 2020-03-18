@@ -13,7 +13,7 @@ import com.zhuang.flowable.manager.UserTaskManager;
 import com.zhuang.flowable.model.NextTaskInfo;
 import com.zhuang.flowable.model.TaskDef;
 import com.zhuang.flowable.model.UserInfo;
-import com.zhuang.flowable.service.UserManagementService;
+import com.zhuang.flowable.service.UserService;
 import org.flowable.engine.*;
 import org.flowable.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.flowable.engine.repository.ProcessDefinition;
@@ -35,7 +35,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     @Autowired
     private IdentityService identityService;
     @Autowired
-    private UserManagementService userManagementService;
+    private UserService userService;
     @Autowired
     private RepositoryService repositoryService;
     @Autowired
@@ -62,7 +62,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         params.put(ProcessMainVariableNames.PROC_TYPE, processDefinition.getName());
         params.put(ProcessMainVariableNames.PROC_CREATE_TIME, new Date());
         params.put(ProcessMainVariableNames.PROC_CREATE_USER_ID, userId);
-        UserInfo userInfo = userManagementService.getUser(userId);
+        UserInfo userInfo = userService.getUser(userId);
         params.put(ProcessMainVariableNames.PROC_CREATE_USER, userInfo.getUserName());
 
         identityService.setAuthenticatedUserId(userId);
@@ -188,7 +188,6 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         if (handlerKey.startsWith(CommonVariableNames.HANDLER_NAME_PREFIX)) {
             handlerKey = handlerKey.replace(CommonVariableNames.HANDLER_NAME_PREFIX, "");
             NextTaskUsersHandler nextTaskUsersHandler = getNextTaskUsersHandlerByKey(handlerKey);
-
             if (nextTaskUsersHandler == null) {
                 throw new HandlerNotFoundException("在“nextTaskUsersHandlers”中找不到key为“" + handlerKey + "”的NextTaskUsersHandler！");
             } else {
@@ -342,7 +341,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         if (workflowContext.getChoice().equals(WorkflowChoiceOptions.BACK)) {
             String nextTaskUser = userTaskManager.getTaskAssignee(userTaskManager.getProcessInstanceId(taskId), workflowContext.getNextTaskDef().getKey());
             if (nextTaskUser != null) {
-                UserInfo userInfo = userManagementService.getUser(nextTaskUser);
+                UserInfo userInfo = userService.getUser(nextTaskUser);
                 userInfos.add(userInfo);
             }
         }

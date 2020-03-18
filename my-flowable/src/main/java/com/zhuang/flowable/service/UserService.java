@@ -4,7 +4,7 @@ import com.zhuang.flowable.model.UserInfo;
 
 import java.util.List;
 
-public interface UserManagementService {
+public interface UserService {
 	
 	UserInfo getUser(String userId);
 	

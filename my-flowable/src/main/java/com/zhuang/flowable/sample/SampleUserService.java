@@ -1,14 +1,12 @@
-package com.zhuang.flowable.service.impl;
+package com.zhuang.flowable.sample;
 
 import com.zhuang.flowable.model.UserInfo;
-import com.zhuang.flowable.service.UserManagementService;
-import org.springframework.stereotype.Component;
+import com.zhuang.flowable.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class DefaultUserManagementService implements UserManagementService {
+public class SampleUserService implements UserService {
 
     public UserInfo getUser(String userId) {
         UserInfo userInfo = new UserInfo();

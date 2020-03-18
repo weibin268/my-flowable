@@ -33,5 +33,8 @@ public class DeploymentManager {
         DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
         deploymentBuilder.addInputStream(resourceName, inputStream).deploy();
     }
-
+    
+    public void deleteDeployment(String deploymentId, boolean cascade) {
+        repositoryService.deleteDeployment(deploymentId, cascade);
+    }
 }

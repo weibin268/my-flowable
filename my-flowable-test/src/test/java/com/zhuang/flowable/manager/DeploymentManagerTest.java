@@ -25,4 +25,9 @@ class DeploymentManagerTest extends MyFlowableTestApplicationTest {
         InputStream inputStream = getClass().getResource("/bpmn/test01.bpmn").openStream();
         deploymentManager.deployByInputStream(inputStream, "test01.bpmn");
     }
+
+    @Test
+    void deleteDeployment(){
+        deploymentManager.deleteDeployment("e843fca5-68f4-11ea-8783-18602477cc91",false);
+    }
 }

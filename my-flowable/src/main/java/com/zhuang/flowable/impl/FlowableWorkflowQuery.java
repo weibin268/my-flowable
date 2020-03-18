@@ -10,7 +10,7 @@ import com.zhuang.flowable.model.FlowInfo;
 import com.zhuang.flowable.model.PageInfo;
 import com.zhuang.flowable.model.ProcDef;
 import com.zhuang.flowable.model.TaskInfo;
-import com.zhuang.flowable.service.UserManagementService;
+import com.zhuang.flowable.service.UserService;
 import com.zhuang.flowable.util.DateUtils;
 import com.zhuang.flowable.util.MapUtils;
 import com.zhuang.flowable.util.VariableNameUtils;
@@ -44,7 +44,7 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
     @Autowired
     private RuntimeService runtimeService;
     @Autowired
-    private UserManagementService userManagementService;
+    private UserService userService;
     @Autowired
     private ProcessVariablesManager processVariablesManager;
     @Autowired
@@ -141,7 +141,7 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
             taskInfo.setKey(historicTaskInstance.getTaskDefinitionKey());
             taskInfo.setName(historicTaskInstance.getName());
             taskInfo.setUserId(historicTaskInstance.getAssignee());
-            taskInfo.setUserName(userManagementService.getUser(taskInfo.getUserId()).getUserName());
+            taskInfo.setUserName(userService.getUser(taskInfo.getUserId()).getUserName());
             if (taskInfo.getUserId() == null) {
                 List<String> userIds = new ArrayList<String>();
                 List<String> userNames = new ArrayList<String>();
@@ -151,7 +151,7 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
                         continue;
                     }
                     userIds.add(identityLink.getUserId());
-                    userNames.add(userManagementService.getUser(identityLink.getUserId()).getUserName());
+                    userNames.add(userService.getUser(identityLink.getUserId()).getUserName());
                 }
                 taskInfo.setUserId(StringUtils.join(userIds.toArray(new String[userIds.size()]), ","));
                 taskInfo.setUserName(StringUtils.join(userNames.toArray(new String[userNames.size()]), ","));

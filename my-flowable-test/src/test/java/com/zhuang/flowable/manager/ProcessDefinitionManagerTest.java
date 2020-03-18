@@ -38,10 +38,9 @@ class ProcessDefinitionManagerTest extends MyFlowableTestApplicationTest {
     }
 
     @Test
-    void getProcessDefinitionList() {
+    public void getProcessDefinitionList() {
         List<ProcessDefinition> processDefinitionList = processDefinitionManager.getProcessDefinitionList();
         System.out.println(processDefinitionList);
     }
-
 
 }
