@@ -10,6 +10,4 @@ public interface UserService {
 
     List<UserInfo> getListByRoleId(String roleId);
 
-    List<UserInfo> getListByRoleName(String roleName);
-
 }

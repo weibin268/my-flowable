@@ -70,9 +70,4 @@ public class SampleUserService implements UserService {
         return userInfos;
     }
 
-    public List<UserInfo> getListByRoleName(String roleName) {
-        List<UserInfo> userInfos = new ArrayList<UserInfo>();
-        return userInfos;
-    }
-
 }
