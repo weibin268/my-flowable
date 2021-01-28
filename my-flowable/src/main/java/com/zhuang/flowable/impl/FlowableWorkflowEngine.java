@@ -80,7 +80,6 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     @Override
     public void save(String taskId, String comment, Map<String, Object> params) {
         ensureParamsNotNull(params);
-        taskService.setVariables(taskId, params);
         List<String> nextUserList = new ArrayList<>();
         ProcessActionListener processActionListener = getWorkflowActionListenerByTaskId(taskId);
         ProcessContext processContext = new ProcessContext(this);
@@ -91,7 +90,11 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         processContext.setCurrentTaskDef(processDefinitionManager.getTaskDefByTaskId(taskId));
         processContext.setNextTaskDef(getNextTaskDef(taskId, params));
         if (processActionListener != null) {
-            processActionListener.onSave(processContext);
+            processActionListener.beforeSave(processContext);
+        }
+        taskService.setVariables(taskId, params);
+        if (processActionListener != null) {
+            processActionListener.afterSave(processContext);
         }
     }
 

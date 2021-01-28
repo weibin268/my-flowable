@@ -43,10 +43,16 @@ public interface ProcessActionListener {
 	void afterDelete(ProcessContext context);
 
 	/**
-	 * 保存操作
+	 * 保存前调用
 	 * @param context
 	 */
-	void onSave(ProcessContext context);
+	void beforeSave(ProcessContext context);
+
+	/**
+	 * 保存后调用
+	 * @param context
+	 */
+	void afterSave(ProcessContext context);
 
 	/**
 	 * 处理下一步处理人
