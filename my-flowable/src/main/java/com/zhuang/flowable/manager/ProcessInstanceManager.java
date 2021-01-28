@@ -20,7 +20,7 @@ public class ProcessInstanceManager {
     @Autowired
     private TaskService taskService;
 
-    public String getApplyUserId(String taskId) {
+    public String getStartUserIdByTaskId(String taskId) {
         HistoricTaskInstance historicTaskInstance = historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
         HistoricProcessInstanceQuery historicProcessInstanceQuery = historyService
                 .createHistoricProcessInstanceQuery();

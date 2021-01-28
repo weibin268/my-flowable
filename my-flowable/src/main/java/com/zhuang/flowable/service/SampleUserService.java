@@ -8,7 +8,7 @@ import java.util.List;
 
 public class SampleUserService implements UserService {
 
-    public UserInfo getUser(String userId) {
+    public UserInfo getById(String userId) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUserId(userId);
         if (userId == null) {
@@ -32,7 +32,7 @@ public class SampleUserService implements UserService {
 
     }
 
-    public List<UserInfo> getUsersByRoleId(String roleId) {
+    public List<UserInfo> getListByRoleId(String roleId) {
         List<UserInfo> userInfos = new ArrayList<UserInfo>();
         if (roleId.equals("sys")) {
             UserInfo userInfo = new UserInfo();
@@ -70,7 +70,7 @@ public class SampleUserService implements UserService {
         return userInfos;
     }
 
-    public List<UserInfo> getUsersByRoleName(String roleName) {
+    public List<UserInfo> getListByRoleName(String roleName) {
         List<UserInfo> userInfos = new ArrayList<UserInfo>();
         return userInfos;
     }

@@ -63,7 +63,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         params.put(ProcessMainVariableNames.PROC_TYPE, processDefinition.getName());
         params.put(ProcessMainVariableNames.PROC_CREATE_TIME, new Date());
         params.put(ProcessMainVariableNames.PROC_CREATE_USER_ID, userId);
-        UserInfo userInfo = userService.getUser(userId);
+        UserInfo userInfo = userService.getById(userId);
         params.put(ProcessMainVariableNames.PROC_CREATE_USER, userInfo.getUserName());
 
         identityService.setAuthenticatedUserId(userId);
@@ -337,7 +337,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         if (processContext.getChoice().equals(ProcessChoiceOptions.BACK)) {
             String nextTaskUser = userTaskManager.getTaskAssignee(userTaskManager.getProcessInstanceId(taskId), processContext.getNextTaskDef().getKey());
             if (nextTaskUser != null) {
-                UserInfo userInfo = userService.getUser(nextTaskUser);
+                UserInfo userInfo = userService.getById(nextTaskUser);
                 userInfoList.add(userInfo);
             }
         }

@@ -141,7 +141,7 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
             taskInfo.setKey(historicTaskInstance.getTaskDefinitionKey());
             taskInfo.setName(historicTaskInstance.getName());
             taskInfo.setUserId(historicTaskInstance.getAssignee());
-            taskInfo.setUserName(userService.getUser(taskInfo.getUserId()).getUserName());
+            taskInfo.setUserName(userService.getById(taskInfo.getUserId()).getUserName());
             if (taskInfo.getUserId() == null) {
                 List<String> userIds = new ArrayList<String>();
                 List<String> userNames = new ArrayList<String>();
@@ -151,7 +151,7 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
                         continue;
                     }
                     userIds.add(identityLink.getUserId());
-                    userNames.add(userService.getUser(identityLink.getUserId()).getUserName());
+                    userNames.add(userService.getById(identityLink.getUserId()).getUserName());
                 }
                 taskInfo.setUserId(StringUtils.join(userIds.toArray(new String[userIds.size()]), ","));
                 taskInfo.setUserName(StringUtils.join(userNames.toArray(new String[userNames.size()]), ","));
