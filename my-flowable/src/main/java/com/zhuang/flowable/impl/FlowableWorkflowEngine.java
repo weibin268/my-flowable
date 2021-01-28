@@ -57,6 +57,8 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     @Override
     public String start(String procDefKey, String userId, String businessKey, Map<String, Object> params) {
         ensureParamsNotNull(params);
+
+        //region 构建流程变量
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionKey(procDefKey).latestVersion().singleResult();
         params.put(ProcessMainVariableNames.PROC_BUSINESS_KEY, businessKey);
         params.put(ProcessMainVariableNames.PROC_DEF_KEY, processDefinition.getKey());
@@ -66,7 +68,9 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         UserInfo userInfo = userService.getById(userId);
         params.put(ProcessMainVariableNames.PROC_CREATE_USER, userInfo.getUserName());
         Map<String, Object> processVariables = ProcessMainVariableNames.getProcessVariables(params);
+        //endregion
 
+        //region 启动前事件
         ProcessActionListener processActionListener = getWorkflowActionListenerByProDefKey(procDefKey);
         ProcessContext processContext = new ProcessContext(this);
         processContext.setBusinessKey(businessKey);
@@ -79,6 +83,8 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         if (processActionListener != null) {
             processActionListener.beforeStart(processContext);
         }
+        //endregion
+
         //region 启动流程实例
         identityService.setAuthenticatedUserId(userId);
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(procDefKey, processContext.getBusinessKey(), processVariables);
@@ -89,10 +95,14 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
             taskService.setAssignee(firstTaskId, userId);
         }
         //endregion
+
+        //region 启动后事件
         if (processActionListener != null) {
             processContext.setTaskId(firstTaskId);
             processActionListener.afterSave(processContext);
         }
+        //endregion
+
         return processInstance.getId() + "." + firstTaskId;
     }
 
@@ -100,6 +110,8 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     public void save(String taskId, String comment, Map<String, Object> params) {
         ensureParamsNotNull(params);
         List<String> nextUserList = new ArrayList<>();
+
+        //region 保存前事件
         ProcessActionListener processActionListener = getWorkflowActionListenerByTaskId(taskId);
         ProcessContext processContext = new ProcessContext(this);
         processContext.setTaskId(taskId);
@@ -111,10 +123,17 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         if (processActionListener != null) {
             processActionListener.beforeSave(processContext);
         }
+        //endregion
+
+        //region 保存操作
         taskService.setVariables(taskId, params);
+        //endregion
+
+        //region 保存后事件
         if (processActionListener != null) {
             processActionListener.afterSave(processContext);
         }
+        //endregion
     }
 
     @Override
@@ -122,15 +141,13 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         params = ensureParamsNotNull(params);
         TaskDef currentTaskDef = processDefinitionManager.getTaskDefByTaskId(taskId);
         String choice = getChoiceFromParams(params);
-
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-
         if (currentTaskDef.getIsCountersign()) {
             calcCountersignVariables(taskId, params, choice);
         }
 
+        //region 提交前事件
         ProcessActionListener processActionListener = getWorkflowActionListenerByTaskId(taskId);
-
         ProcessContext processContext = new ProcessContext(this);
         processContext.setTaskId(taskId);
         processContext.setComment(comment);
@@ -139,16 +156,20 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         processContext.setCurrentTaskDef(currentTaskDef);
         processContext.setNextTaskDef(getNextTaskDef(taskId, params));
         processContext.setChoice(choice);
-
         if (processActionListener != null) {
             processActionListener.beforeSubmit(processContext);
         }
+        //endregion
 
+        //region 运行流程
         run(task, userId, nextUserList, comment, params, processContext);
+        //endregion
 
+        //region 提交后事件
         if (processActionListener != null) {
             processActionListener.afterSubmit(processContext);
         }
+        //endregion
 
     }
 
@@ -156,24 +177,29 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     public void delete(String taskId, String comment, Map<String, Object> params) {
         params = ensureParamsNotNull(params);
 
+        //region 删除前事件
         ProcessActionListener processActionListener = getWorkflowActionListenerByTaskId(taskId);
-
         ProcessContext processContext = new ProcessContext(this);
         processContext.setTaskId(taskId);
         processContext.setComment(comment);
         processContext.setParams(params);
         processContext.setCurrentTaskDef(processDefinitionManager.getTaskDefByTaskId(taskId));
         processContext.setChoice(getChoiceFromParams(params));
-
         if (processActionListener != null) {
             processActionListener.beforeDelete(processContext);
         }
+        //endregion
 
+        //region 删除流程实例
         processInstanceManager.deleteProcessInstanceByTaskId(taskId, comment);
+        //endregion
 
+        //region 删除后事件
         if (processActionListener != null) {
             processActionListener.afterDelete(processContext);
         }
+        //endregion
+
     }
 
     @Override
