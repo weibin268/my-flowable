@@ -3,59 +3,57 @@ package com.zhuang.flowable.model;
 import java.util.List;
 
 public class NextTaskInfo {
-	
-	private String taskKey;
-	private String taskName;
-	private Boolean isCountersign;
-	private List<UserInfo> users;
 
-	public String getTaskKey() {
-		return taskKey;
-	}
+    private String taskKey;
+    private String taskName;
+    private Boolean isCountersign;
+    private List<UserInfo> userList;
 
-	public void setTaskKey(String taskKey) {
-		this.taskKey = taskKey;
-	}
+    public String getTaskKey() {
+        return taskKey;
+    }
 
-	public String getTaskName() {
-		
-		return taskName;
-	}
+    public void setTaskKey(String taskKey) {
+        this.taskKey = taskKey;
+    }
 
-	public void setTaskName(String taskName) {
-		
-		if(taskKey.equals("_endTask_"))
-		{
-			this.taskName = "结束";
-		}else
-		{
-			this.taskName = taskName;
-		}
-	}	
-	
-	public Boolean getIsCountersign() {
-		return isCountersign;
-	}
+    public String getTaskName() {
 
-	public void setIsCountersign(Boolean isCountersign) {
-		this.isCountersign = isCountersign;
-	}
+        return taskName;
+    }
 
-	public List<UserInfo> getUsers() {
-		return users;
-	}
+    public void setTaskName(String taskName) {
 
-	public void setUsers(List<UserInfo> users) {
-		this.users = users;
-	}
+        if (taskKey.equals("_endTask_")) {
+            this.taskName = "结束";
+        } else {
+            this.taskName = taskName;
+        }
+    }
 
-	@Override
-	public String toString() {
-		return "NextTaskInfo{" +
-				"taskKey='" + taskKey + '\'' +
-				", taskName='" + taskName + '\'' +
-				", isCountersign=" + isCountersign +
-				", users=" + users +
-				'}';
-	}
+    public Boolean getIsCountersign() {
+        return isCountersign;
+    }
+
+    public void setIsCountersign(Boolean isCountersign) {
+        this.isCountersign = isCountersign;
+    }
+
+    public List<UserInfo> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<UserInfo> userList) {
+        this.userList = userList;
+    }
+
+    @Override
+    public String toString() {
+        return "NextTaskInfo{" +
+                "taskKey='" + taskKey + '\'' +
+                ", taskName='" + taskName + '\'' +
+                ", isCountersign=" + isCountersign +
+                ", userList=" + userList +
+                '}';
+    }
 }

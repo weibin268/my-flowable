@@ -197,7 +197,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
             processActionListener.onRetrieveNextTaskUsers(userInfoList, processContext);
         }
         result.setIsCountersign(nextTaskDef.getIsCountersign());
-        result.setUsers(userInfoList);
+        result.setUserList(userInfoList);
         return result;
     }
 
