@@ -1,13 +1,14 @@
 package com.zhuang.flowable.handler;
 
-import com.zhuang.flowable.handler.NextTaskUsersHandler;
 import com.zhuang.flowable.WorkflowContext;
 import com.zhuang.flowable.model.UserInfo;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SampleNextTaskUserHandler implements NextTaskUsersHandler {
+@Component
+public class CreateUserHandler implements NextTaskUserHandler {
 
     @Override
     public List<UserInfo> execute(WorkflowContext workflowContext) {
@@ -23,7 +24,7 @@ public class SampleNextTaskUserHandler implements NextTaskUsersHandler {
 
     @Override
     public String key() {
-        return "$roleIds";
+        return "$createUser";
     }
 
 }

@@ -1,7 +1,7 @@
 package com.zhuang.flowable.impl;
 
 import com.zhuang.flowable.BaseWorkflowEngine;
-import com.zhuang.flowable.handler.NextTaskUsersHandler;
+import com.zhuang.flowable.handler.NextTaskUserHandler;
 import com.zhuang.flowable.listener.WorkflowActionListener;
 import com.zhuang.flowable.WorkflowContext;
 import com.zhuang.flowable.constant.*;
@@ -52,7 +52,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     @Autowired(required = false)
     private List<WorkflowActionListener> workflowActionListenerList;
     @Autowired(required = false)
-    private List<NextTaskUsersHandler> nextTaskUsersHandlerList;
+    private List<NextTaskUserHandler> nextTaskUserHandlerList;
 
     @Override
     public String startNew(String procDefKey, String userId, String businessKey, Map<String, Object> params) {
@@ -175,7 +175,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         workflowContext.setCurrentTaskDef(currentTaskDef);
         workflowContext.setNextTaskDef(nextTaskDef);
         workflowContext.setChoice(choice);
-        initNextTaskUsers(userInfoList, taskId, workflowContext);
+        initNextTaskUser(userInfoList, taskId, workflowContext);
         String nextTaskUsersConfig;
         if (nextTaskDef.getIsCountersign()) {
             nextTaskUsersConfig = nextTaskDef.getCandidateUser();
@@ -184,12 +184,12 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         }
         if (MyHandlerTag.isMyHandlerTag(nextTaskUsersConfig)) {
             MyHandlerTag myHandlerTag = new MyHandlerTag(nextTaskUsersConfig);
-            NextTaskUsersHandler nextTaskUsersHandler = getNextTaskUsersHandlerByKey(myHandlerTag.getKey());
-            if (nextTaskUsersHandler == null) {
-                throw new HandlerNotFoundException("在“nextTaskUsersHandlers”中找不到key为“" + myHandlerTag.getKey() + "”的NextTaskUsersHandler！");
+            NextTaskUserHandler nextTaskUserHandler = getNextTaskUsersHandlerByKey(myHandlerTag.getKey());
+            if (nextTaskUserHandler == null) {
+                throw new HandlerNotFoundException("在“nextTaskUserHandlers”中找不到key为“" + myHandlerTag.getKey() + "”的NextTaskUserHandler！");
             } else {
                 workflowContext.setComment(myHandlerTag.getValue());
-                userInfoList.addAll(nextTaskUsersHandler.execute(workflowContext));
+                userInfoList.addAll(nextTaskUserHandler.execute(workflowContext));
             }
         }
         WorkflowActionListener workflowActionListener = getWorkflowActionListenerByTaskId(taskId);
@@ -233,9 +233,9 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         return workflowActionListenerList.stream().filter(c -> c.key().equals(processDefinitionEntity.getKey())).findFirst().orElse(null);
     }
 
-    private NextTaskUsersHandler getNextTaskUsersHandlerByKey(String key) {
-        if (nextTaskUsersHandlerList == null) return null;
-        return nextTaskUsersHandlerList.stream().filter(c -> c.key().equals(key)).findFirst().orElse(null);
+    private NextTaskUserHandler getNextTaskUsersHandlerByKey(String key) {
+        if (nextTaskUserHandlerList == null) return null;
+        return nextTaskUserHandlerList.stream().filter(c -> c.key().equals(key)).findFirst().orElse(null);
     }
 
     private TaskDef getNextTaskDef(String taskId, Map<String, Object> params) {
@@ -333,7 +333,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         }
     }
 
-    private void initNextTaskUsers(List<UserInfo> userInfoList, String taskId, WorkflowContext workflowContext) {
+    private void initNextTaskUser(List<UserInfo> userInfoList, String taskId, WorkflowContext workflowContext) {
         if (workflowContext.getChoice().equals(WorkflowChoiceOptions.BACK)) {
             String nextTaskUser = userTaskManager.getTaskAssignee(userTaskManager.getProcessInstanceId(taskId), workflowContext.getNextTaskDef().getKey());
             if (nextTaskUser != null) {

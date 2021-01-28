@@ -5,7 +5,7 @@ import com.zhuang.flowable.model.UserInfo;
 
 import java.util.List;
 
-public interface NextTaskUsersHandler {
+public interface NextTaskUserHandler {
 
     List<UserInfo> execute(WorkflowContext workflowContext);
 

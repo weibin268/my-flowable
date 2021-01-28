@@ -1,6 +1,6 @@
 package com.zhuang.flowable.config;
 
-import com.zhuang.flowable.handler.SampleNextTaskUserHandler;
+import com.zhuang.flowable.handler.SampleRoleHandler;
 import com.zhuang.flowable.service.SampleUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +14,8 @@ public class TestConfig {
     }
 
     @Bean
-    public SampleNextTaskUserHandler sampleNextTaskUserHandler() {
-        return new SampleNextTaskUserHandler();
+    public SampleRoleHandler sampleNextTaskUserHandler() {
+        return new SampleRoleHandler();
     }
 
 }
