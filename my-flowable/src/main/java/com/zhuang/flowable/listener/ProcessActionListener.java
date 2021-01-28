@@ -1,7 +1,6 @@
 package com.zhuang.flowable.listener;
 
 
-import com.zhuang.flowable.WorkflowContext;
 import com.zhuang.flowable.model.UserInfo;
 
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.List;
  * @author zwb
  *
  */
-public interface WorkflowActionListener {
+public interface ProcessActionListener {
 
 	/**
 	 * 流程定义Key
@@ -23,43 +22,43 @@ public interface WorkflowActionListener {
 	 * 提交前调用
 	 * @param context
 	 */
-	void beforeSubmit(WorkflowContext context);
+	void beforeSubmit(ProcessContext context);
 
 	/**
 	 * 提交后调用
 	 * @param context
 	 */
-	void afterSubmit(WorkflowContext context);
+	void afterSubmit(ProcessContext context);
 
 	/**
 	 * 刪除前调用
 	 * @param context
 	 */
-	void beforeDelete(WorkflowContext context);
+	void beforeDelete(ProcessContext context);
 
 	/**
 	 * 刪除后调用
 	 * @param context
 	 */
-	void afterDelete(WorkflowContext context);
+	void afterDelete(ProcessContext context);
 
 	/**
 	 * 保存操作
 	 * @param context
 	 */
-	void onSave(WorkflowContext context);
+	void onSave(ProcessContext context);
 
 	/**
 	 * 处理下一步处理人
 	 * @param nextTaskUsers
 	 */
-	void onRetrieveNextTaskUsers(List<UserInfo> nextTaskUsers, WorkflowContext context);
+	void onRetrieveNextTaskUsers(List<UserInfo> nextTaskUsers, ProcessContext context);
 
 	/***
 	 * 加载表单数据
 	 * @param context
 	 */
-	void onRetrieveParams(WorkflowContext context);
+	void onRetrieveParams(ProcessContext context);
 
 
 }

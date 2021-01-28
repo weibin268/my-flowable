@@ -1,11 +1,12 @@
-package com.zhuang.flowable;
+package com.zhuang.flowable.listener;
 
+import com.zhuang.flowable.WorkflowEngine;
 import com.zhuang.flowable.model.TaskDef;
 
 import java.util.List;
 import java.util.Map;
 
-public abstract class WorkflowContext {
+public class ProcessContext {
 
 	protected String taskId;
 	protected String comment;
@@ -72,7 +73,7 @@ public abstract class WorkflowContext {
 		this.nextTaskDef = nextTaskDef;
 	}
 
-	public WorkflowContext(WorkflowEngine workflowEngine)
+	public ProcessContext(WorkflowEngine workflowEngine)
 	{
 		this.workflowEngine=workflowEngine;
 	}
