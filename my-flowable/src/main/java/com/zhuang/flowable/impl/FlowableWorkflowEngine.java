@@ -269,9 +269,9 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
             countersignRejectedCount = (Integer) objCountersignRejectedCount;
         }
 
-        if (choice.equals(WorkflowChoiceOptions.APPROVE)) {
+        if (choice.equals(ProcessChoiceOptions.APPROVE)) {
             ++countersignApprovedCount;
-        } else if (choice.equals(WorkflowChoiceOptions.REJECT)) {
+        } else if (choice.equals(ProcessChoiceOptions.REJECT)) {
             ++countersignRejectedCount;
         }
 
@@ -281,7 +281,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     }
 
     private String getChoiceFromParams(Map<String, Object> params) {
-        Object objChoice = params.get(WorkflowChoiceOptions.STORE_KEY);
+        Object objChoice = params.get(ProcessChoiceOptions.STORE_KEY);
         return objChoice == null ? "" : objChoice.toString();
     }
 
@@ -334,7 +334,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     }
 
     private void initNextTaskUser(List<UserInfo> userInfoList, String taskId, ProcessContext processContext) {
-        if (processContext.getChoice().equals(WorkflowChoiceOptions.BACK)) {
+        if (processContext.getChoice().equals(ProcessChoiceOptions.BACK)) {
             String nextTaskUser = userTaskManager.getTaskAssignee(userTaskManager.getProcessInstanceId(taskId), processContext.getNextTaskDef().getKey());
             if (nextTaskUser != null) {
                 UserInfo userInfo = userService.getUser(nextTaskUser);
