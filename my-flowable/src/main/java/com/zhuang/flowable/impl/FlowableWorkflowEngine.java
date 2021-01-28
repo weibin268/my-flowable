@@ -74,7 +74,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
             firstTaskId = nextTaskList.get(0).getId();
             taskService.setAssignee(firstTaskId, userId);
         }
-        return processInstance.getId() + "|" + firstTaskId;
+        return processInstance.getId() + "." + firstTaskId;
     }
 
     @Override
