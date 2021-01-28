@@ -55,7 +55,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     private List<NextTaskUserHandler> nextTaskUserHandlerList;
 
     @Override
-    public String startNew(String procDefKey, String userId, String businessKey, Map<String, Object> params) {
+    public String start(String procDefKey, String userId, String businessKey, Map<String, Object> params) {
         ensureParamsNotNull(params);
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionKey(procDefKey).latestVersion().singleResult();
         params.put(ProcessMainVariableNames.PROC_BUSINESS_KEY, businessKey);

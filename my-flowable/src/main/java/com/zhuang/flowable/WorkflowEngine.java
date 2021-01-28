@@ -25,7 +25,7 @@ public interface WorkflowEngine {
 	 *            业务表单数据
 	 * @return
 	 */
-	String startNew(String procDefKey, String userId, String businessKey, Map<String, Object> params);
+	String start(String procDefKey, String userId, String businessKey, Map<String, Object> params);
 
 	/**
 	 * 保存
