@@ -55,9 +55,9 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     private List<NextTaskUsersHandler> nextTaskUsersHandlerList;
 
     @Override
-    public String startNew(String processDefinitionKey, String userId, String businessKey, Map<String, Object> params) {
+    public String startNew(String procDefKey, String userId, String businessKey, Map<String, Object> params) {
         ensureParamsNotNull(params);
-        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionKey(processDefinitionKey).latestVersion().singleResult();
+        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionKey(procDefKey).latestVersion().singleResult();
         params.put(ProcessMainVariableNames.PROC_BUSINESS_KEY, businessKey);
         params.put(ProcessMainVariableNames.PROC_DEF_KEY, processDefinition.getKey());
         params.put(ProcessMainVariableNames.PROC_TYPE, processDefinition.getName());
@@ -67,7 +67,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         params.put(ProcessMainVariableNames.PROC_CREATE_USER, userInfo.getUserName());
 
         identityService.setAuthenticatedUserId(userId);
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, params);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(procDefKey, businessKey, params);
         List<Task> nextTaskList = taskService.createTaskQuery().processInstanceId(processInstance.getId()).list();
         String firstTaskId = "";
         if (nextTaskList.size() == 1) {

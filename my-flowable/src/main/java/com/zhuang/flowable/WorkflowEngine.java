@@ -7,15 +7,15 @@ import java.util.Map;
 
 /**
  * 工作流引擎接口
- * 
+ *
  * @author zwb
  *
  */
 public interface WorkflowEngine {
 	/**
 	 * 启动新的流程实例
-	 * 
-	 * @param processDefinitionKey
+	 *
+	 * @param procDefKey
 	 *            流程定义Key
 	 * @param userId
 	 *            用户ID
@@ -25,11 +25,11 @@ public interface WorkflowEngine {
 	 *            业务表单数据
 	 * @return
 	 */
-	String startNew(String processDefinitionKey, String userId, String businessKey, Map<String, Object> params);
+	String startNew(String procDefKey, String userId, String businessKey, Map<String, Object> params);
 
 	/**
 	 * 保存
-	 * 
+	 *
 	 * @param taskId
 	 *            任务ID
 	 * @param comment
@@ -41,7 +41,7 @@ public interface WorkflowEngine {
 
 	/**
 	 * 提交
-	 * 
+	 *
 	 * @param taskId
 	 *            任务ID
 	 * @param userId
@@ -65,7 +65,7 @@ public interface WorkflowEngine {
 	 *            业务表单数据
 	 */
 	void delete(String taskId, String comment, Map<String, Object> params);
-	
+
 	/**
 	 * 计算下一步处理人
 	 * @param taskId
@@ -73,7 +73,7 @@ public interface WorkflowEngine {
 	 * @return
 	 */
 	NextTaskInfo retrieveNextTaskInfo(String taskId, Map<String, Object> params);
-	
+
 	/***
 	 * 获取表单数据
 	 * @param taskId
