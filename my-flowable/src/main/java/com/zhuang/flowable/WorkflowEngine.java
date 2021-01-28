@@ -46,14 +46,14 @@ public interface WorkflowEngine {
 	 *            任务ID
 	 * @param userId
 	 *            用户ID
-	 * @param nextUsers
+	 * @param nextUserList
 	 *            下一步处理人
 	 * @param comment
 	 *            备注（审批意见）
 	 * @param params
 	 *            业务表单数据
 	 */
-	void submit(String taskId, String userId, List<String> nextUsers, String comment, Map<String, Object> params);
+	void submit(String taskId, String userId, List<String> nextUserList, String comment, Map<String, Object> params);
 
 	 /**
 	 * 删除

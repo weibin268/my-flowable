@@ -81,12 +81,12 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     public void save(String taskId, String comment, Map<String, Object> params) {
         ensureParamsNotNull(params);
         taskService.setVariables(taskId, params);
-        List<String> nextUsers = new ArrayList<String>();
+        List<String> nextUserList = new ArrayList<>();
         WorkflowActionListener workflowActionListener = getWorkflowActionListenerByTaskId(taskId);
         WorkflowContext workflowContext = new FlowableWorkflowContext(this);
         workflowContext.setTaskId(taskId);
         workflowContext.setComment(comment);
-        workflowContext.setNextUsers(nextUsers);
+        workflowContext.setNextUserList(nextUserList);
         workflowContext.setParams(params);
         workflowContext.setCurrentTaskDef(processDefinitionManager.getTaskDefByTaskId(taskId));
         workflowContext.setNextTaskDef(getNextTaskDef(taskId, params));
@@ -96,7 +96,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     }
 
     @Override
-    public void submit(String taskId, String userId, List<String> nextUsers, String comment, Map<String, Object> params) {
+    public void submit(String taskId, String userId, List<String> nextUserList, String comment, Map<String, Object> params) {
         params = ensureParamsNotNull(params);
         TaskDef currentTaskDef = processDefinitionManager.getTaskDefByTaskId(taskId);
         String choice = getChoiceFromParams(params);
@@ -112,7 +112,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         WorkflowContext workflowContext = new FlowableWorkflowContext(this);
         workflowContext.setTaskId(taskId);
         workflowContext.setComment(comment);
-        workflowContext.setNextUsers(nextUsers);
+        workflowContext.setNextUserList(nextUserList);
         workflowContext.setParams(params);
         workflowContext.setCurrentTaskDef(currentTaskDef);
         workflowContext.setNextTaskDef(getNextTaskDef(taskId, params));
@@ -122,7 +122,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
             workflowActionListener.beforeSubmit(workflowContext);
         }
 
-        run(task, userId, nextUsers, comment, params, workflowContext);
+        run(task, userId, nextUserList, comment, params, workflowContext);
 
         if (workflowActionListener != null) {
             workflowActionListener.afterSubmit(workflowContext);
@@ -285,7 +285,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         return objChoice == null ? "" : objChoice.toString();
     }
 
-    private void run(Task task, String userId, List<String> nextUsers, String comment, Map<String, Object> envVariables, WorkflowContext workflowContext) {
+    private void run(Task task, String userId, List<String> nextUserList, String comment, Map<String, Object> envVariables, WorkflowContext workflowContext) {
 
         Boolean isCountersign4Next = workflowContext.getNextTaskDef().getIsCountersign();
         Boolean isCountersign4Current = workflowContext.getCurrentTaskDef().getIsCountersign();
@@ -295,14 +295,14 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         }
 
         if (isCountersign4Next) {
-            envVariables.put(CountersignVariableNames.COUNTERSIGN_USERS, nextUsers);
+            envVariables.put(CountersignVariableNames.COUNTERSIGN_USERS, nextUserList);
         }
 
         taskService.setAssignee(task.getId(), userId);
         taskService.complete(task.getId(), envVariables);
 
         if (!(isCountersign4Next || isCountersign4Current)) {
-            setTaskUser(task.getId(), nextUsers);
+            setTaskUser(task.getId(), nextUserList);
         }
 
         if (isCountersign4Current) {
@@ -310,22 +310,21 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
             if (tasks.size() >= 0) {
                 TaskDef newTaskDef = processDefinitionManager.getTaskDefByTaskId(tasks.get(0).getId());
                 if (newTaskDef.getIsCountersign() == false) {
-                    setTaskUser(task.getId(), nextUsers);
+                    setTaskUser(task.getId(), nextUserList);
                 }
             }
         }
     }
 
-    private void setTaskUser(String preTaskId, List<String> users) {
+    private void setTaskUser(String preTaskId, List<String> userList) {
         HistoricTaskInstance historicTaskInstance = historyService.createHistoricTaskInstanceQuery().taskId(preTaskId).singleResult();
-        if (users != null && users.size() != 0) {
+        if (userList != null && userList.size() != 0) {
             List<Task> nextTaskList = taskService.createTaskQuery().processInstanceId(historicTaskInstance.getProcessInstanceId()).list();
             for (Task nextTask : nextTaskList) {
-                if (users.size() == 1) {
-                    // nextTask.setAssignee(nextUsers.get(0));
-                    taskService.setAssignee(nextTask.getId(), users.get(0));
+                if (userList.size() == 1) {
+                    taskService.setAssignee(nextTask.getId(), userList.get(0));
                 } else {
-                    for (String userId : users) {
+                    for (String userId : userList) {
                         taskService.addCandidateUser(nextTask.getId(), userId);
                     }
                     taskService.setAssignee(nextTask.getId(), null);
@@ -334,12 +333,12 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         }
     }
 
-    private void initNextTaskUsers(List<UserInfo> userInfos, String taskId, WorkflowContext workflowContext) {
+    private void initNextTaskUsers(List<UserInfo> userInfoList, String taskId, WorkflowContext workflowContext) {
         if (workflowContext.getChoice().equals(WorkflowChoiceOptions.BACK)) {
             String nextTaskUser = userTaskManager.getTaskAssignee(userTaskManager.getProcessInstanceId(taskId), workflowContext.getNextTaskDef().getKey());
             if (nextTaskUser != null) {
                 UserInfo userInfo = userService.getUser(nextTaskUser);
-                userInfos.add(userInfo);
+                userInfoList.add(userInfo);
             }
         }
     }

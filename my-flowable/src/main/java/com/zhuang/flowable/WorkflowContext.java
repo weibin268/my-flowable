@@ -6,16 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class WorkflowContext {
-	
+
 	protected String taskId;
 	protected String comment;
-	protected List<String> nextUsers;
+	protected List<String> nextUserList;
 	protected Map<String, Object> params;
 	protected WorkflowEngine workflowEngine;
 	protected TaskDef currentTaskDef;
 	protected TaskDef nextTaskDef;
-	protected String choice;	
-	
+	protected String choice;
+
 	public String getTaskId() {
 		return taskId;
 	}
@@ -32,12 +32,12 @@ public abstract class WorkflowContext {
 		this.comment = comment;
 	}
 
-	public List<String> getNextUsers() {
-		return nextUsers;
+	public List<String> getNextUserList() {
+		return nextUserList;
 	}
 
-	public void setNextUsers(List<String> nextUsers) {
-		this.nextUsers = nextUsers;
+	public void setNextUserList(List<String> nextUserList) {
+		this.nextUserList = nextUserList;
 	}
 
 	public Map<String, Object> getParams() {
@@ -55,7 +55,7 @@ public abstract class WorkflowContext {
 	public void setWorkflowEngine(WorkflowEngine workflowEngine) {
 		this.workflowEngine = workflowEngine;
 	}
-	
+
 	public TaskDef getCurrentTaskDef() {
 		return currentTaskDef;
 	}
@@ -85,5 +85,5 @@ public abstract class WorkflowContext {
 		this.choice = choice;
 	}
 
-	
+
 }
