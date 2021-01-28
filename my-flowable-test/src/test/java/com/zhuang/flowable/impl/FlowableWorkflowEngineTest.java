@@ -41,7 +41,8 @@ class FlowableWorkflowEngineTest extends MyFlowableTestApplicationTest {
     void retrieveNextTaskInfo() {
         Map<String, Object> params = new HashMap<>();
         params.put(WorkflowChoiceOptions.STORE_KEY, WorkflowChoiceOptions.AGREE);
-        NextTaskInfo nextTaskInfo = flowableWorkflowEngine.retrieveNextTaskInfo("8e5d4359-685f-11ea-87ef-34f39a2852bc", params);
+        params.put("amount", 100);
+        NextTaskInfo nextTaskInfo = flowableWorkflowEngine.retrieveNextTaskInfo("27fd216b-6115-11eb-99a8-b42e995cab02", params);
         System.out.println(nextTaskInfo);
     }
 

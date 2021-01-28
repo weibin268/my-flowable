@@ -17,7 +17,7 @@ public interface WorkflowActionListener {
 	 * 流程定义Key
 	 * @return
 	 */
-	String procDefKey();
+	String key();
 
 	/**
 	 * 提交前调用

@@ -230,7 +230,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     private WorkflowActionListener getWorkflowActionListenerByTaskId(String taskId) {
         ProcessDefinitionEntity processDefinitionEntity = processDefinitionManager.getProcessDefinitionEntityByTaskId(taskId);
         if (workflowActionListenerList == null) return null;
-        return workflowActionListenerList.stream().filter(c -> c.procDefKey().equals(processDefinitionEntity.getKey())).findFirst().orElse(null);
+        return workflowActionListenerList.stream().filter(c -> c.key().equals(processDefinitionEntity.getKey())).findFirst().orElse(null);
     }
 
     private NextTaskUsersHandler getNextTaskUsersHandlerByKey(String key) {
