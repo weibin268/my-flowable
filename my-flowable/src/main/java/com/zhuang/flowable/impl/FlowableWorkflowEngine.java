@@ -65,14 +65,33 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         params.put(ProcessMainVariableNames.PROC_CREATE_USER_ID, userId);
         UserInfo userInfo = userService.getById(userId);
         params.put(ProcessMainVariableNames.PROC_CREATE_USER, userInfo.getUserName());
+        Map<String, Object> processVariables = ProcessMainVariableNames.getProcessVariables(params);
 
+        ProcessActionListener processActionListener = getWorkflowActionListenerByProDefKey(procDefKey);
+        ProcessContext processContext = new ProcessContext(this);
+        processContext.setBusinessKey(businessKey);
+        processContext.setTaskId(null);
+        processContext.setComment(null);
+        processContext.setNextUserList(new ArrayList<>());
+        processContext.setParams(params);
+        processContext.setCurrentTaskDef(null);
+        processContext.setNextTaskDef(null);
+        if (processActionListener != null) {
+            processActionListener.beforeStart(processContext);
+        }
+        //region 启动流程实例
         identityService.setAuthenticatedUserId(userId);
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(procDefKey, businessKey, params);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(procDefKey, processContext.getBusinessKey(), processVariables);
         List<Task> nextTaskList = taskService.createTaskQuery().processInstanceId(processInstance.getId()).list();
         String firstTaskId = "";
         if (nextTaskList.size() == 1) {
             firstTaskId = nextTaskList.get(0).getId();
             taskService.setAssignee(firstTaskId, userId);
+        }
+        //endregion
+        if (processActionListener != null) {
+            processContext.setTaskId(firstTaskId);
+            processActionListener.afterSave(processContext);
         }
         return processInstance.getId() + "." + firstTaskId;
     }
@@ -233,7 +252,11 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     private ProcessActionListener getWorkflowActionListenerByTaskId(String taskId) {
         ProcessDefinitionEntity processDefinitionEntity = processDefinitionManager.getProcessDefinitionEntityByTaskId(taskId);
         if (processActionListenerList == null) return null;
-        return processActionListenerList.stream().filter(c -> c.key().equals(processDefinitionEntity.getKey())).findFirst().orElse(null);
+        return getWorkflowActionListenerByProDefKey(processDefinitionEntity.getKey());
+    }
+
+    private ProcessActionListener getWorkflowActionListenerByProDefKey(String proDefKey) {
+        return processActionListenerList.stream().filter(c -> c.key().equals(proDefKey)).findFirst().orElse(null);
     }
 
     private NextTaskUserHandler getNextTaskUsersHandlerByKey(String key) {

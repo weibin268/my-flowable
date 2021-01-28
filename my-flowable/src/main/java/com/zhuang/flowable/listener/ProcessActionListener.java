@@ -19,6 +19,30 @@ public interface ProcessActionListener {
 	String key();
 
 	/**
+	 * 启动前调用
+	 * @param context
+	 */
+	void beforeStart(ProcessContext context);
+
+	/**
+	 * 启动后调用
+	 * @param context
+	 */
+	void afterStart(ProcessContext context);
+
+	/**
+	 * 保存前调用
+	 * @param context
+	 */
+	void beforeSave(ProcessContext context);
+
+	/**
+	 * 保存后调用
+	 * @param context
+	 */
+	void afterSave(ProcessContext context);
+
+	/**
 	 * 提交前调用
 	 * @param context
 	 */
@@ -42,17 +66,6 @@ public interface ProcessActionListener {
 	 */
 	void afterDelete(ProcessContext context);
 
-	/**
-	 * 保存前调用
-	 * @param context
-	 */
-	void beforeSave(ProcessContext context);
-
-	/**
-	 * 保存后调用
-	 * @param context
-	 */
-	void afterSave(ProcessContext context);
 
 	/**
 	 * 处理下一步处理人
