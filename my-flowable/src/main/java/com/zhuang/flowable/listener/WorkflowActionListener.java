@@ -14,11 +14,17 @@ import java.util.List;
 public interface WorkflowActionListener {
 
 	/**
+	 * 流程定义Key
+	 * @return
+	 */
+	String procDefKey();
+
+	/**
 	 * 提交前调用
 	 * @param context
 	 */
 	void beforeSubmit(WorkflowContext context);
-	
+
 	/**
 	 * 提交后调用
 	 * @param context
@@ -30,19 +36,19 @@ public interface WorkflowActionListener {
 	 * @param context
 	 */
 	void beforeDelete(WorkflowContext context);
-	
+
 	/**
 	 * 刪除后调用
 	 * @param context
 	 */
 	void afterDelete(WorkflowContext context);
-	
+
 	/**
 	 * 保存操作
 	 * @param context
 	 */
 	void onSave(WorkflowContext context);
-	
+
 	/**
 	 * 处理下一步处理人
 	 * @param nextTaskUsers
@@ -55,5 +61,5 @@ public interface WorkflowActionListener {
 	 */
 	void onRetrieveParams(WorkflowContext context);
 
-	String key();
+
 }
