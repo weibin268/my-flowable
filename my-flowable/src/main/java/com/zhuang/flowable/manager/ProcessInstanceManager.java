@@ -6,6 +6,7 @@ import org.flowable.engine.TaskService;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.history.HistoricProcessInstanceQuery;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.task.api.TaskInfo;
 import org.flowable.task.api.history.HistoricTaskInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ public class ProcessInstanceManager {
     @Autowired
     private RuntimeService runtimeService;
     @Autowired
-    private TaskService taskService;
+    private TaskManager taskManager;
 
     public String getStartUserIdByTaskId(String taskId) {
         HistoricTaskInstance historicTaskInstance = historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
@@ -30,9 +31,14 @@ public class ProcessInstanceManager {
     }
 
     public void deleteProcessInstanceByTaskId(String taskId, String deleteReason) {
-        String processInstanceId = taskService.createTaskQuery().taskId(taskId).singleResult().getProcessInstanceId();
+        String processInstanceId = taskManager.getTaskByTaskId(taskId).getProcessInstanceId();
         runtimeService.deleteProcessInstance(processInstanceId, deleteReason);
     }
+
+    public void deleteProcessInstanceByTaskInfo(TaskInfo taskInfo, String deleteReason) {
+        runtimeService.deleteProcessInstance(taskInfo.getProcessInstanceId(), deleteReason);
+    }
+
 
     public boolean isProcessFinished(String processInstanceId) {
         ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();

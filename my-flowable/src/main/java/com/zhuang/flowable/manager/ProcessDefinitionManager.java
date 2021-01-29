@@ -42,6 +42,11 @@ public class ProcessDefinitionManager {
         return def;
     }
 
+    public ProcessDefinitionEntity getProcessDefinitionEntityByTaskInfo(TaskInfo taskInfo) {
+        ProcessDefinitionEntity def = (ProcessDefinitionEntity) (((RepositoryServiceImpl) repositoryService).getDeployedProcessDefinition(taskInfo.getProcessDefinitionId()));
+        return def;
+    }
+
     public ProcessDefinitionEntity getProcessDefinitionEntityByKey(String proDefKey) {
         ProcessDefinitionEntity def = (ProcessDefinitionEntity) repositoryService.createProcessDefinitionQuery().processDefinitionKey(proDefKey).latestVersion().singleResult();
         return def;
@@ -52,9 +57,29 @@ public class ProcessDefinitionManager {
         return getTaskDefModelByFlowNode(flowNode);
     }
 
+    public TaskDef getTaskDefByTaskInfo(TaskInfo taskInfo) {
+        FlowNode flowNode = getFlowNodeByTaskInfo(taskInfo);
+        return getTaskDefModelByFlowNode(flowNode);
+    }
+
+    public TaskDef getNextTaskDefByTaskId(String taskId, Map<String, Object> params) {
+        FlowNode flowNode = getFlowNodeByTaskId(taskId);
+        FlowNode nextFlowNode = getNextFlowNode(flowNode, params);
+        return getTaskDefModelByFlowNode(nextFlowNode);
+    }
+
+    public TaskDef getNextTaskDefByTaskInfo(TaskInfo taskInfo, Map<String, Object> params) {
+        FlowNode flowNode = getFlowNodeByTaskInfo(taskInfo);
+        FlowNode nextFlowNode = getNextFlowNode(flowNode, params);
+        return getTaskDefModelByFlowNode(nextFlowNode);
+    }
+
     public FlowNode getFlowNodeByTaskId(String taskId) {
-        //先从运行时获取，没有再从历史中获取
         TaskInfo taskInfo = taskManager.getTaskInfoByTaskId(taskId);
+        return getFlowNodeByTaskInfo(taskInfo);
+    }
+
+    public FlowNode getFlowNodeByTaskInfo(TaskInfo taskInfo) {
         Process process = repositoryService.getBpmnModel(taskInfo.getProcessDefinitionId()).getMainProcess();
         return (FlowNode) process.getFlowElement(taskInfo.getTaskDefinitionKey());
     }
@@ -84,12 +109,6 @@ public class ProcessDefinitionManager {
             result.setCountersign(false);
         }
         return result;
-    }
-
-    public TaskDef getNextTaskDefByTaskId(String taskId, Map<String, Object> params) {
-        FlowNode flowNode = getFlowNodeByTaskId(taskId);
-        FlowNode nextFlowNode = getNextFlowNode(flowNode, params);
-        return getTaskDefModelByFlowNode(nextFlowNode);
     }
 
     public FlowNode getNextFlowNode(FlowNode flowNode, Map<String, Object> params) {
@@ -162,15 +181,13 @@ public class ProcessDefinitionManager {
             return false;
         }
     }
-
-    public boolean isFirstTask(String taskId) {
-        FlowNode flowNode = getFlowNodeByTaskId(taskId);
+    
+    public boolean isFirstTask(TaskInfo taskInfo) {
+        FlowNode flowNode = getFlowNodeByTaskInfo(taskInfo);
         if (flowNode instanceof StartEvent) {
             return true;
         } else {
             return false;
         }
     }
-
-
 }

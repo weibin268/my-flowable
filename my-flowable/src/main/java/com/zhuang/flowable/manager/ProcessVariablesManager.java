@@ -3,6 +3,7 @@ package com.zhuang.flowable.manager;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
+import org.flowable.task.api.TaskInfo;
 import org.flowable.task.api.history.HistoricTaskInstance;
 import org.flowable.variable.api.history.HistoricVariableInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class ProcessVariablesManager {
     private HistoryService historyService;
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private TaskManager taskManager;
 
     public Map<String, Object> getHistoryVariablesByTaskId(String taskId) {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -32,5 +35,13 @@ public class ProcessVariablesManager {
 
     public Map<String, Object> getRuntimeVariablesByTaskId(String taskId) {
         return taskService.createTaskQuery().taskId(taskId).singleResult().getProcessVariables();
+    }
+
+    public Map<String, Object> getVariablesByTaskId(String taskId) {
+        return getVariablesByTaskInfo(taskManager.getTaskInfoByTaskId(taskId));
+    }
+
+    public Map<String, Object> getVariablesByTaskInfo(TaskInfo taskInfo) {
+        return taskInfo.getProcessVariables();
     }
 }
