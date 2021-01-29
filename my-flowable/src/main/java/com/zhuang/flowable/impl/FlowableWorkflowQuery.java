@@ -102,7 +102,7 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
                 }
             }
             flowInfo.setCurrentActivityName(currentActivityName);
-            Map<String, Object> processVariables = processVariablesManager.getProcessVariablesByTaskId(historicTaskInstance.getId());
+            Map<String, Object> processVariables = processVariablesManager.getHistoryVariablesByTaskId(historicTaskInstance.getId());
             fillFlowInfoModel(flowInfo, processVariables);
             flowInfoList.add(flowInfo);
         }

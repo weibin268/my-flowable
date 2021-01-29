@@ -15,6 +15,7 @@ import org.flowable.engine.impl.RepositoryServiceImpl;
 import org.flowable.engine.impl.bpmn.behavior.ParallelMultiInstanceBehavior;
 import org.flowable.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.flowable.engine.repository.ProcessDefinition;
+import org.flowable.task.api.Task;
 import org.flowable.task.api.history.HistoricTaskInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -51,12 +52,23 @@ public class ProcessDefinitionManager {
     }
 
     public FlowNode getFlowNodeByTaskId(String taskId) {
-        HistoricTaskInstance historicTaskInstance = historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
-        if (historicTaskInstance == null) {
-            throw new HistoricTaskNotFoundException("taskId:" + taskId);
+        String taskDefinitionKey;
+        String processDefinitionId;
+        //先从运行时获取，没有再从历史中获取
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        if (task != null) {
+            taskDefinitionKey = task.getTaskDefinitionKey();
+            processDefinitionId = task.getProcessDefinitionId();
+        } else {
+            HistoricTaskInstance historicTaskInstance = historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
+            if (historicTaskInstance == null) {
+                throw new HistoricTaskNotFoundException("taskId:" + taskId);
+            }
+            taskDefinitionKey = historicTaskInstance.getTaskDefinitionKey();
+            processDefinitionId = historicTaskInstance.getProcessDefinitionId();
         }
-        Process process = repositoryService.getBpmnModel(historicTaskInstance.getProcessDefinitionId()).getMainProcess();
-        return (FlowNode) process.getFlowElement(historicTaskInstance.getTaskDefinitionKey());
+        Process process = repositoryService.getBpmnModel(processDefinitionId).getMainProcess();
+        return (FlowNode) process.getFlowElement(taskDefinitionKey);
     }
 
     public TaskDef getTaskDefModelByFlowNode(FlowNode flowNode) {
