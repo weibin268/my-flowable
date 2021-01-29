@@ -16,6 +16,7 @@ import org.flowable.engine.impl.bpmn.behavior.ParallelMultiInstanceBehavior;
 import org.flowable.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.task.api.Task;
+import org.flowable.task.api.TaskInfo;
 import org.flowable.task.api.history.HistoricTaskInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,13 +28,13 @@ import java.util.Map;
 public class ProcessDefinitionManager {
 
     @Autowired
-    private RuntimeService runtimeService;
-    @Autowired
     private TaskService taskService;
     @Autowired
     private RepositoryService repositoryService;
     @Autowired
     private HistoryService historyService;
+    @Autowired
+    private TaskManager taskManager;
 
     public ProcessDefinitionEntity getProcessDefinitionEntityByTaskId(String taskId) {
         HistoricTaskInstance historicTaskInstance = historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
@@ -52,23 +53,10 @@ public class ProcessDefinitionManager {
     }
 
     public FlowNode getFlowNodeByTaskId(String taskId) {
-        String taskDefinitionKey;
-        String processDefinitionId;
         //先从运行时获取，没有再从历史中获取
-        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-        if (task != null) {
-            taskDefinitionKey = task.getTaskDefinitionKey();
-            processDefinitionId = task.getProcessDefinitionId();
-        } else {
-            HistoricTaskInstance historicTaskInstance = historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
-            if (historicTaskInstance == null) {
-                throw new HistoricTaskNotFoundException("taskId:" + taskId);
-            }
-            taskDefinitionKey = historicTaskInstance.getTaskDefinitionKey();
-            processDefinitionId = historicTaskInstance.getProcessDefinitionId();
-        }
-        Process process = repositoryService.getBpmnModel(processDefinitionId).getMainProcess();
-        return (FlowNode) process.getFlowElement(taskDefinitionKey);
+        TaskInfo taskInfo = taskManager.getTaskInfoByTaskId(taskId);
+        Process process = repositoryService.getBpmnModel(taskInfo.getProcessDefinitionId()).getMainProcess();
+        return (FlowNode) process.getFlowElement(taskInfo.getTaskDefinitionKey());
     }
 
     public TaskDef getTaskDefModelByFlowNode(FlowNode flowNode) {
