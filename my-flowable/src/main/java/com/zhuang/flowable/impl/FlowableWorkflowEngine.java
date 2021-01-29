@@ -289,11 +289,11 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
 
     private ProcessActionListener getWorkflowActionListenerByTaskInfo(TaskInfo taskInfo) {
         ProcessDefinitionEntity processDefinitionEntity = processDefinitionManager.getProcessDefinitionEntityByTaskInfo(taskInfo);
-        if (processActionListenerList == null) return null;
         return getWorkflowActionListenerByProDefKey(processDefinitionEntity.getKey());
     }
 
     private ProcessActionListener getWorkflowActionListenerByProDefKey(String proDefKey) {
+        if (processActionListenerList == null) return null;
         return processActionListenerList.stream().filter(c -> c.key().equals(proDefKey)).findFirst().orElse(null);
     }
 
