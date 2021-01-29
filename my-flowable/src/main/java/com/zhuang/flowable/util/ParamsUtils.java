@@ -13,6 +13,7 @@ public class ParamsUtils {
         Map result = new HashMap();
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             if (entry.getKey().equals(BUSINESS_DATA_KEY)) continue;
+            result.put(entry.getKey(), entry.getValue());
         }
         return result;
     }
