@@ -1,6 +1,7 @@
 package com.zhuang.flowable.impl;
 
 import com.zhuang.flowable.BaseWorkflowEngine;
+import com.zhuang.flowable.enums.ProcessChoiceOptions;
 import com.zhuang.flowable.handler.NextTaskUserHandler;
 import com.zhuang.flowable.listener.ProcessActionListener;
 import com.zhuang.flowable.listener.ProcessContext;
@@ -316,14 +317,14 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         Object objCountersignRejectedCount = runtimeService.getVariable(taskInfo.getProcessInstanceId(), CountersignVariableNames.COUNTERSIGN_REJECTED_COUNT);
         Integer countersignRejectedCount = null;
         if (objCountersignRejectedCount == null) {
-            countersignRejectedCount = new Integer(0);
+            countersignRejectedCount = 0;
         } else {
             countersignRejectedCount = (Integer) objCountersignRejectedCount;
         }
 
-        if (choice.equals(ProcessChoiceOptions.APPROVE)) {
+        if (ProcessChoiceOptions.APPROVE.equals(choice)) {
             ++countersignApprovedCount;
-        } else if (choice.equals(ProcessChoiceOptions.REJECT)) {
+        } else if (ProcessChoiceOptions.REJECT.equals(choice)) {
             ++countersignRejectedCount;
         }
         envVariables.put(CountersignVariableNames.COUNTERSIGN_APPROVED_COUNT, countersignApprovedCount);
@@ -380,7 +381,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     }
 
     private void initNextTaskUser(List<UserInfo> userInfoList, String taskId, ProcessContext processContext) {
-        if (processContext.getChoice().equals(ProcessChoiceOptions.BACK)) {
+        if (ProcessChoiceOptions.BACK.equals(processContext.getChoice())) {
             String nextTaskUser = taskManager.getTaskAssignee(taskManager.getProcessInstanceId(taskId), processContext.getNextTaskDef().getKey());
             if (nextTaskUser != null) {
                 UserInfo userInfo = userService.getById(nextTaskUser);
