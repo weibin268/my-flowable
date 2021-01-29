@@ -15,6 +15,7 @@ import com.zhuang.flowable.model.TaskDef;
 import com.zhuang.flowable.model.UserInfo;
 import com.zhuang.flowable.service.UserService;
 import com.zhuang.flowable.handler.MyHandlerTag;
+import com.zhuang.flowable.util.ParamsUtils;
 import org.flowable.engine.*;
 import org.flowable.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.flowable.engine.repository.ProcessDefinition;
@@ -67,7 +68,6 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         params.put(ProcessMainVariableNames.PROC_CREATE_USER_ID, userId);
         UserInfo userInfo = userService.getById(userId);
         params.put(ProcessMainVariableNames.PROC_CREATE_USER, userInfo.getUserName());
-        Map<String, Object> processVariables = ProcessMainVariableNames.getProcessVariables(params);
         //endregion
 
         //region 启动前事件
@@ -87,7 +87,8 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
 
         //region 启动流程实例
         identityService.setAuthenticatedUserId(userId);
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(procDefKey, processContext.getBusinessKey(), processVariables);
+        Map<String, Object> variables = ParamsUtils.getVariables(params);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(procDefKey, processContext.getBusinessKey(), variables);
         List<Task> nextTaskList = taskService.createTaskQuery().processInstanceId(processInstance.getId()).list();
         String firstTaskId = "";
         if (nextTaskList.size() == 1) {
@@ -126,7 +127,8 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         //endregion
 
         //region 保存操作
-        taskService.setVariables(taskId, params);
+        Map<String, Object> variables = ParamsUtils.getVariables(params);
+        taskService.setVariables(taskId, variables);
         //endregion
 
         //region 保存后事件
@@ -142,7 +144,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         TaskDef currentTaskDef = processDefinitionManager.getTaskDefByTaskId(taskId);
         String choice = getChoiceFromParams(params);
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-        if (currentTaskDef.getIsCountersign()) {
+        if (currentTaskDef.isCountersign()) {
             calcCountersignVariables(taskId, params, choice);
         }
 
@@ -162,7 +164,8 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         //endregion
 
         //region 运行流程
-        run(task, userId, nextUserList, comment, params, processContext);
+        Map<String, Object> variables = ParamsUtils.getVariables(params);
+        run(task, userId, nextUserList, comment, variables, processContext);
         //endregion
 
         //region 提交后事件
@@ -209,7 +212,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         String choice = getChoiceFromParams(params);
         TaskDef currentTaskDef = processDefinitionManager.getTaskDefByTaskId(taskId);
 
-        if (currentTaskDef.getIsCountersign()) {
+        if (currentTaskDef.isCountersign()) {
             calcCountersignVariables(taskId, params, choice);
         }
 
@@ -225,7 +228,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         processContext.setChoice(choice);
         initNextTaskUser(userInfoList, taskId, processContext);
         String nextTaskUsersConfig;
-        if (nextTaskDef.getIsCountersign()) {
+        if (nextTaskDef.isCountersign()) {
             nextTaskUsersConfig = nextTaskDef.getCandidateUser();
         } else {
             nextTaskUsersConfig = nextTaskDef.getAssignee();
@@ -244,7 +247,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         if (processActionListener != null) {
             processActionListener.onRetrieveNextTaskUsers(userInfoList, processContext);
         }
-        result.setIsCountersign(nextTaskDef.getIsCountersign());
+        result.setIsCountersign(nextTaskDef.isCountersign());
         result.setUserList(userInfoList);
         return result;
     }
@@ -337,21 +340,21 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         return objChoice == null ? "" : objChoice.toString();
     }
 
-    private void run(Task task, String userId, List<String> nextUserList, String comment, Map<String, Object> envVariables, ProcessContext processContext) {
+    private void run(Task task, String userId, List<String> nextUserList, String comment, Map<String, Object> variables, ProcessContext processContext) {
 
-        Boolean isCountersign4Next = processContext.getNextTaskDef().getIsCountersign();
-        Boolean isCountersign4Current = processContext.getCurrentTaskDef().getIsCountersign();
+        Boolean isCountersign4Next = processContext.getNextTaskDef().isCountersign();
+        Boolean isCountersign4Current = processContext.getCurrentTaskDef().isCountersign();
 
         if (comment != null) {
             taskService.addComment(task.getId(), task.getProcessInstanceId(), comment);
         }
 
         if (isCountersign4Next) {
-            envVariables.put(CountersignVariableNames.COUNTERSIGN_USERS, nextUserList);
+            variables.put(CountersignVariableNames.COUNTERSIGN_USERS, nextUserList);
         }
 
         taskService.setAssignee(task.getId(), userId);
-        taskService.complete(task.getId(), envVariables);
+        taskService.complete(task.getId(), variables);
 
         if (!(isCountersign4Next || isCountersign4Current)) {
             setTaskUser(task.getId(), nextUserList);
@@ -361,7 +364,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
             List<Task> tasks = taskService.createTaskQuery().processInstanceId(task.getProcessInstanceId()).list();
             if (tasks.size() >= 0) {
                 TaskDef newTaskDef = processDefinitionManager.getTaskDefByTaskId(tasks.get(0).getId());
-                if (newTaskDef.getIsCountersign() == false) {
+                if (newTaskDef.isCountersign() == false) {
                     setTaskUser(task.getId(), nextUserList);
                 }
             }

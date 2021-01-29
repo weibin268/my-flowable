@@ -79,9 +79,9 @@ public class ProcessDefinitionManager {
             }
         }
         if (flowNode.getBehavior() instanceof ParallelMultiInstanceBehavior) {
-            result.setIsCountersign(true);
+            result.setCountersign(true);
         } else {
-            result.setIsCountersign(false);
+            result.setCountersign(false);
         }
         return result;
     }

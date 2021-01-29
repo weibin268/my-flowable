@@ -2,8 +2,8 @@ package com.zhuang.flowable.util;
 
 public class VariableNameUtils {
 
-    private static final String START_SUFFIX = "_START";
-    private static final String END_SUFFIX = "_END";
+    private static final String START_SUFFIX = "_begin";
+    private static final String END_SUFFIX = "_end";
 
     public static String toStartName(String name) {
         return name + START_SUFFIX;
