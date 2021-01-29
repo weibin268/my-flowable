@@ -114,10 +114,11 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         ensureParamsNotNull(params);
         List<String> nextUserList = new ArrayList<>();
         TaskInfo taskInfo = taskManager.getTaskInfoByTaskId(taskId);
+        Map<String, Object> processVariables = processVariablesManager.getRuntimeVariablesByTaskId(taskId);
         //region 保存前事件
         ProcessActionListener processActionListener = getWorkflowActionListenerByTaskInfo(taskInfo);
         ProcessContext processContext = new ProcessContext(this);
-        processContext.setBusinessKey(taskInfo.getProcessVariables().get(ProcessMainVariableNames.PROC_BUSINESS_KEY).toString());
+        processContext.setBusinessKey(processVariables.get(ProcessMainVariableNames.PROC_BUSINESS_KEY).toString());
         processContext.setTaskId(taskId);
         processContext.setComment(comment);
         processContext.setNextUserList(nextUserList);
@@ -145,6 +146,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     public void submit(String taskId, String userId, List<String> nextUserList, String comment, Map<String, Object> params) {
         params = ensureParamsNotNull(params);
         TaskInfo taskInfo = taskManager.getTaskInfoByTaskId(taskId);
+        Map<String, Object> processVariables = processVariablesManager.getRuntimeVariablesByTaskId(taskId);
         TaskDef currentTaskDef = processDefinitionManager.getTaskDefByTaskInfo(taskInfo);
         String choice = ParamsUtils.getChoice(params);
         if (currentTaskDef.isCountersign()) {
@@ -154,7 +156,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         //region 提交前事件
         ProcessActionListener processActionListener = getWorkflowActionListenerByTaskInfo(taskInfo);
         ProcessContext processContext = new ProcessContext(this);
-        processContext.setBusinessKey(taskInfo.getProcessVariables().get(ProcessMainVariableNames.PROC_BUSINESS_KEY).toString());
+        processContext.setBusinessKey(processVariables.get(ProcessMainVariableNames.PROC_BUSINESS_KEY).toString());
         processContext.setTaskId(taskId);
         processContext.setComment(comment);
         processContext.setNextUserList(nextUserList);
@@ -184,10 +186,11 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     public void delete(String taskId, String comment, Map<String, Object> params) {
         params = ensureParamsNotNull(params);
         TaskInfo taskInfo = taskManager.getTaskInfoByTaskId(taskId);
+        Map<String, Object> processVariables = processVariablesManager.getRuntimeVariablesByTaskId(taskId);
         //region 删除前事件
         ProcessActionListener processActionListener = getWorkflowActionListenerByTaskInfo(taskInfo);
         ProcessContext processContext = new ProcessContext(this);
-        processContext.setBusinessKey(taskInfo.getProcessVariables().get(ProcessMainVariableNames.PROC_BUSINESS_KEY).toString());
+        processContext.setBusinessKey(processVariables.get(ProcessMainVariableNames.PROC_BUSINESS_KEY).toString());
         processContext.setTaskId(taskId);
         processContext.setComment(comment);
         processContext.setParams(params);
@@ -215,10 +218,9 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         NextTaskInfo result = new NextTaskInfo();
         List<UserInfo> userInfoList = new ArrayList<UserInfo>();
         String choice = ParamsUtils.getChoice(params);
-
         TaskInfo taskInfo = taskManager.getTaskInfoByTaskId(taskId);
+        Map<String, Object> processVariables = processVariablesManager.getRuntimeVariablesByTaskId(taskId);
         TaskDef currentTaskDef = processDefinitionManager.getTaskDefByTaskInfo(taskInfo);
-
         if (currentTaskDef.isCountersign()) {
             calcCountersignVariables(taskInfo, params, choice);
         }
@@ -228,7 +230,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         result.setTaskName(nextTaskDef.getName());
 
         ProcessContext processContext = new ProcessContext(this);
-        processContext.setBusinessKey(taskInfo.getProcessVariables().get(ProcessMainVariableNames.PROC_BUSINESS_KEY).toString());
+        processContext.setBusinessKey(processVariables.get(ProcessMainVariableNames.PROC_BUSINESS_KEY).toString());
         processContext.setTaskId(taskId);
         processContext.setParams(params);
         processContext.setCurrentTaskDef(currentTaskDef);
@@ -263,7 +265,8 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     @Override
     public Map<String, Object> retrieveParams(String taskId) {
         TaskInfo taskInfo = taskManager.getTaskInfoByTaskId(taskId);
-        Map<String, Object> params = processVariablesManager.getVariablesByTaskInfo(taskInfo);
+        Map<String, Object> processVariables = processVariablesManager.getRuntimeVariablesByTaskId(taskId);
+        Map<String, Object> params = processVariablesManager.getHistoryVariablesByTaskId(taskId);
         TaskDef currentTaskDef = processDefinitionManager.getTaskDefByTaskInfo(taskInfo);
         ProcessDefinition processDefinition = processDefinitionManager.getProcessDefinitionEntityByTaskInfo(taskInfo);
 
@@ -277,7 +280,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         ProcessActionListener processActionListener = getWorkflowActionListenerByTaskInfo(taskInfo);
         if (processActionListener != null) {
             ProcessContext processContext = new ProcessContext(this);
-            processContext.setBusinessKey(taskInfo.getProcessVariables().get(ProcessMainVariableNames.PROC_BUSINESS_KEY).toString());
+            processContext.setBusinessKey(processVariables.get(ProcessMainVariableNames.PROC_BUSINESS_KEY).toString());
             processContext.setTaskId(taskId);
             processContext.setParams(params);
             processContext.setCurrentTaskDef(currentTaskDef);

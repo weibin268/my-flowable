@@ -9,11 +9,11 @@
     <sequenceFlow id="sid-42BE5661-C3D5-4DE6-96F5-73D34822727A" sourceRef="apply" targetRef="condition"></sequenceFlow>
     <userTask id="manager1" name="副经理审批" activiti:assignee="$createUser"></userTask>
     <sequenceFlow id="fews" sourceRef="condition" targetRef="manager1"></sequenceFlow>
-    <userTask id="manager2" name="总经理审批" activiti:assignee="$roleIds:00001"></userTask>
+    <userTask id="manager2" name="总经理审批" activiti:assignee="$roleIds:mgr"></userTask>
     <sequenceFlow id="alot" sourceRef="condition" targetRef="manager2">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${amount>1000}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="financeManager" name="财务经理审批" activiti:assignee="$roleIds:00001"></userTask>
+    <userTask id="financeManager" name="财务经理审批" activiti:assignee="$roleIds:def"></userTask>
     <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow7" sourceRef="manager1" targetRef="exclusivegateway1"></sequenceFlow>
     <sequenceFlow id="flow8" sourceRef="manager2" targetRef="exclusivegateway1"></sequenceFlow>

@@ -34,14 +34,7 @@ public class ProcessVariablesManager {
     }
 
     public Map<String, Object> getRuntimeVariablesByTaskId(String taskId) {
-        return taskService.createTaskQuery().taskId(taskId).singleResult().getProcessVariables();
+        return taskService.getVariables(taskId);
     }
 
-    public Map<String, Object> getVariablesByTaskId(String taskId) {
-        return getVariablesByTaskInfo(taskManager.getTaskInfoByTaskId(taskId));
-    }
-
-    public Map<String, Object> getVariablesByTaskInfo(TaskInfo taskInfo) {
-        return taskInfo.getProcessVariables();
-    }
 }
