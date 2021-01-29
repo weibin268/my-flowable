@@ -167,6 +167,7 @@ public class FlowableWorkflowQuery implements WorkflowQuery {
         if (result.size() > 0) {
             TaskInfo lastTask = result.get(result.size() - 1);
             if (lastTask.getEndTime() != null) {
+                //TODO: END 节点没有记录到历史中
                 boolean isEndTask = processDefinitionManager.isEndTask(lastTask.getId());
                 if (isEndTask) {
                     TaskInfo taskInfo = new TaskInfo();
