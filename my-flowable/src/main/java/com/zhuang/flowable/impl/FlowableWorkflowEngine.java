@@ -103,7 +103,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         }
         //endregion
 
-        return processInstance.getId() + "." + firstTaskId;
+        return processInstance.getId() + ":" + firstTaskId;
     }
 
     @Override
