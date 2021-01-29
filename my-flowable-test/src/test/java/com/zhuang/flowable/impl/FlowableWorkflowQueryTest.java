@@ -20,21 +20,21 @@ class FlowableWorkflowQueryTest extends MyFlowableTestApplicationTest {
 
     @Test
     void getMyTodoListPage() {
-        PageInfo<FlowInfo> flowInfoPageInfo= flowableWorkflowQuery.getMyTodoListPage("zwb", 1, 100, new HashMap<>());
+        PageInfo<FlowInfo> flowInfoPageInfo= flowableWorkflowQuery.getMyTodoListPage("zs", 1, 100, new HashMap<>());
         System.out.println(flowInfoPageInfo);
         flowInfoPageInfo.getList().stream().forEach(System.out::println);
     }
 
     @Test
     void getMyDoneListPage() {
-        PageInfo<FlowInfo> flowInfoPageInfo = flowableWorkflowQuery.getMyDoneListPage("zwb", 1, 100, new HashMap<>());
+        PageInfo<FlowInfo> flowInfoPageInfo = flowableWorkflowQuery.getMyDoneListPage("zs", 1, 100, new HashMap<>());
         System.out.println(flowInfoPageInfo);
         flowInfoPageInfo.getList().stream().forEach(System.out::println);
     }
 
     @Test
     void getHistoryTaskInfoList(){
-        List<TaskInfo> taskInfoList = flowableWorkflowQuery.getHistoryTaskInfoList("c1b3b89d-6804-11ea-9b7a-18602477cc91");
+        List<TaskInfo> taskInfoList = flowableWorkflowQuery.getHistoryTaskInfoList("32cd56e9-6247-11eb-8037-005056c00001");
         taskInfoList.stream().forEach(System.out::println);
     }
 

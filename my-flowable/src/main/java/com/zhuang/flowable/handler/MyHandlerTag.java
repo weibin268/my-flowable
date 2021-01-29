@@ -15,6 +15,7 @@ public class MyHandlerTag {
     }
 
     public static boolean isMyHandlerTag(String tag) {
+        if (tag == null) return false;
         return tag.startsWith(HANDLER_TAG_PREFIX);
     }
 

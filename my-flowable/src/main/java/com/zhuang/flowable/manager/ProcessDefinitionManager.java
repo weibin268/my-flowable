@@ -85,6 +85,7 @@ public class ProcessDefinitionManager {
     }
 
     public TaskDef getTaskDefModelByFlowNode(FlowNode flowNode) {
+        if (flowNode == null) return null;
         TaskDef result = new TaskDef();
         if (flowNode instanceof EndEvent) {
             result.setKey(EndTaskVariableNames.KEY);
@@ -181,7 +182,7 @@ public class ProcessDefinitionManager {
             return false;
         }
     }
-    
+
     public boolean isFirstTask(TaskInfo taskInfo) {
         FlowNode flowNode = getFlowNodeByTaskInfo(taskInfo);
         if (flowNode instanceof StartEvent) {

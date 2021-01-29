@@ -341,7 +341,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
 
     private void run(TaskInfo taskInfo, String userId, List<String> nextUserList, String comment, Map<String, Object> variables, ProcessContext processContext) {
 
-        Boolean isCountersign4Next = processContext.getNextTaskDef().isCountersign();
+        Boolean isCountersign4Next = processContext.getNextTaskDef() == null ? false : processContext.getNextTaskDef().isCountersign();
         Boolean isCountersign4Current = processContext.getCurrentTaskDef().isCountersign();
 
         if (comment != null) {

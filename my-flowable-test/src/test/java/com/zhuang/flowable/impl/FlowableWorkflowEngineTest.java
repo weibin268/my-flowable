@@ -32,18 +32,19 @@ class FlowableWorkflowEngineTest extends MyFlowableTestApplicationTest {
 
     @Test
     void submit() {
-        String taskId = "c1b3b89d-6804-11ea-9b7a-18602477cc91";
+        String taskId = "c0e91f27-6249-11eb-b854-005056c00001";
         Map<String, Object> params = new HashMap<>();
+        ParamsUtils.setChoice(params, ProcessChoiceOptions.AGREE.getName());
         params.put("amount", 10000);
-        flowableWorkflowEngine.submit(taskId, "zs", Arrays.asList("1"), "bb", params);
+        flowableWorkflowEngine.submit(taskId, "zs", Arrays.asList("zs"), "bb", params);
     }
 
     @Test
     void retrieveNextTaskInfo() {
         Map<String, Object> params = new HashMap<>();
         ParamsUtils.setChoice(params, ProcessChoiceOptions.AGREE.getName());
-        params.put("amount", 100);
-        NextTaskInfo nextTaskInfo = flowableWorkflowEngine.retrieveNextTaskInfo("27fd216b-6115-11eb-99a8-b42e995cab02", params);
+        params.put("amount", 10000);
+        NextTaskInfo nextTaskInfo = flowableWorkflowEngine.retrieveNextTaskInfo("c0e91f27-6249-11eb-b854-005056c00001", params);
         System.out.println(nextTaskInfo);
     }
 
