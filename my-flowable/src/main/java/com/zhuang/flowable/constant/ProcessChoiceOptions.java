@@ -2,8 +2,6 @@ package com.zhuang.flowable.constant;
 
 public class ProcessChoiceOptions {
 
-	public static final String STORE_KEY = "choice";
-
 	public static final String SAVE = "保存";
 
 	public static final String DELETE = "刪除";
@@ -19,4 +17,5 @@ public class ProcessChoiceOptions {
 	public static final String AGREE = "同意";
 
 	public static final String DISAGREE = "不同意";
+
 }

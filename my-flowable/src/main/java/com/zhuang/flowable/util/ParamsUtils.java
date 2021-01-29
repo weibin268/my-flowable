@@ -1,11 +1,14 @@
 package com.zhuang.flowable.util;
 
+import com.zhuang.flowable.constant.ProcessChoiceOptions;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class ParamsUtils {
 
-    private static final String BUSINESS_DATA_KEY = "_businessData";
+    public static final String BUSINESS_DATA_KEY = "businessData";
+    public static final String CHOICE_KEY = "choice";
 
     public static Map<String, Object> getVariables(Map<String, Object> params) {
         if (params == null) return null;
@@ -27,4 +30,13 @@ public class ParamsUtils {
         params.put(BUSINESS_DATA_KEY, businessData);
     }
 
+    public static String getChoice(Map<String, Object> params) {
+        Object objChoice = params.get(CHOICE_KEY);
+        return objChoice == null ? "" : objChoice.toString();
+    }
+
+    public static void setChoice(Map<String, Object> params, String choice) {
+        if (params == null) return;
+        params.put(CHOICE_KEY, choice);
+    }
 }

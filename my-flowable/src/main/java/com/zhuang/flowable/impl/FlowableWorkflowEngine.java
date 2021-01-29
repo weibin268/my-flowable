@@ -145,7 +145,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         params = ensureParamsNotNull(params);
         TaskInfo taskInfo = taskManager.getTaskInfoByTaskId(taskId);
         TaskDef currentTaskDef = processDefinitionManager.getTaskDefByTaskInfo(taskInfo);
-        String choice = getChoiceFromParams(params);
+        String choice = ParamsUtils.getChoice(params);
         if (currentTaskDef.isCountersign()) {
             calcCountersignVariables(taskInfo, params, choice);
         }
@@ -189,7 +189,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         processContext.setComment(comment);
         processContext.setParams(params);
         processContext.setCurrentTaskDef(processDefinitionManager.getTaskDefByTaskInfo(taskInfo));
-        processContext.setChoice(getChoiceFromParams(params));
+        processContext.setChoice(ParamsUtils.getChoice(params));
         if (processActionListener != null) {
             processActionListener.beforeDelete(processContext);
         }
@@ -211,7 +211,7 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
     public NextTaskInfo retrieveNextTaskInfo(String taskId, Map<String, Object> params) {
         NextTaskInfo result = new NextTaskInfo();
         List<UserInfo> userInfoList = new ArrayList<UserInfo>();
-        String choice = getChoiceFromParams(params);
+        String choice = ParamsUtils.getChoice(params);
 
         TaskInfo taskInfo = taskManager.getTaskInfoByTaskId(taskId);
         TaskDef currentTaskDef = processDefinitionManager.getTaskDefByTaskInfo(taskInfo);
@@ -330,10 +330,6 @@ public class FlowableWorkflowEngine extends BaseWorkflowEngine {
         envVariables.put(CountersignVariableNames.COUNTERSIGN_REJECTED_COUNT, countersignRejectedCount);
     }
 
-    private String getChoiceFromParams(Map<String, Object> params) {
-        Object objChoice = params.get(ProcessChoiceOptions.STORE_KEY);
-        return objChoice == null ? "" : objChoice.toString();
-    }
 
     private void run(TaskInfo taskInfo, String userId, List<String> nextUserList, String comment, Map<String, Object> variables, ProcessContext processContext) {
 
